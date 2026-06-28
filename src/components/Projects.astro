@@ -1,12 +1,20 @@
 ---
 import { projects } from '../data/cv';
+
+interface Props {
+  heading?: string;
+  limit?: number;
+  viewAllHref?: string;
+}
+const { heading = 'Projects', limit, viewAllHref } = Astro.props;
+const list = limit ? projects.slice(0, limit) : projects;
 ---
 
 <section>
-  <p class="section-label reveal">Projects</p>
+  <p class="section-label reveal">{heading}</p>
 
   <div class="projects-grid reveal">
-    {projects.map(p => (
+    {list.map(p => (
       <a class="card" href={p.href} target="_blank" rel="noopener">
         <div class="card-header">
           <span class="card-name">{p.name}</span>
@@ -20,9 +28,22 @@ import { projects } from '../data/cv';
       </a>
     ))}
   </div>
+
+  {viewAllHref && (
+    <a class="view-all reveal" href={viewAllHref}>view all projects →</a>
+  )}
 </section>
 
 <style>
+  .view-all {
+    display: inline-block;
+    margin-top: 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+  .view-all:hover { opacity: 1; text-decoration: underline; }
+
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -50,7 +71,7 @@ import { projects } from '../data/cv';
     position: absolute;
     inset: 0;
     background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%),
-                rgba(156, 176, 128, 0.10), transparent 45%);
+                rgba(129, 195, 215, 0.14), transparent 45%);
     opacity: 0;
     transition: opacity 0.25s;
     pointer-events: none;

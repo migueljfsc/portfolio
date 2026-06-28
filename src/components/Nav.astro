@@ -1,0 +1,80 @@
+---
+import { profile } from '../data/cv';
+import ThemeToggle from './ThemeToggle.astro';
+
+const tabs = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'CV', href: '/cv' },
+];
+
+// Active tab: match by path prefix (so /blog/my-post still highlights Blog).
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+<nav class="nav">
+  <a class="brand" href="/">{profile.name}</a>
+  <div class="nav-right">
+    <ul class="tabs">
+      {tabs.map(t => (
+        <li>
+          <a href={t.href} class:list={["tab", { active: isActive(t.href) }]}>
+            {t.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <ThemeToggle />
+  </div>
+</nav>
+
+<style>
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .brand {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .brand:hover { color: var(--accent); opacity: 1; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    list-style: none;
+  }
+
+  .tab {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    transition: color 0.18s, background 0.18s;
+  }
+  .tab:hover { color: var(--accent); background: var(--bg-hover); opacity: 1; }
+  .tab.active { color: var(--accent); background: var(--bg-hover); }
+
+  @media (max-width: 520px) {
+    .nav { flex-wrap: wrap; padding-bottom: 1.25rem; }
+    .nav-right { gap: 0.75rem; }
+    .tab { padding: 0.4rem 0.55rem; }
+  }
+</style>

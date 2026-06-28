@@ -29,31 +29,42 @@ content there, never inline in components. Exports: `profile`, `about`, `experie
 - **Package manager**: pnpm
 
 ## Project structure
+Multi-page site (top nav). Every page wraps in `layouts/Layout.astro`.
 ```
 src/
   data/cv.ts               — CANONICAL content (profile, about, experience, education, skills, projects)
-  pages/index.astro        — single-page entry; .layout = sticky .sidebar + .content
-  pages/resume.astro       — print-only A4 résumé (PDF source); self-contained styles
+  content.config.ts        — blog collection (glob loader, src/content/blog/*.md)
+  content/blog/*.md        — blog posts (frontmatter: title, description, date, tags, draft)
+  layouts/Layout.astro     — shared shell: head, theme anti-FOUC, Nav, <slot>, Footer, reveal/glow scripts
+  pages/
+    index.astro            — HOME: intro + latest posts + featured projects
+    blog/index.astro       — blog post list
+    blog/[...slug].astro   — single post (renders Markdown into .prose)
+    projects.astro         — all projects
+    cv.astro               — full CV (.layout = sticky .sidebar + .content)
+    resume.astro           — print-only A4 résumé (PDF source); self-contained styles
   components/
-    Hero.astro             — sidebar: name + SocialLinks
+    Nav.astro              — top nav: brand + tabs (Blog/Projects/CV) + ThemeToggle; active-tab via path
+    Hero.astro             — CV sidebar: name + SocialLinks
     SocialLinks.astro      — 4 icon buttons (GitHub/LinkedIn/Email/Résumé), hrefs from profile
-    ThemeToggle.astro      — fixed top-right dark/light toggle
-    About.astro            — intro paragraphs
-    Projects.astro         — project card grid
-    Experience.astro       — work history timeline + Education sub-block
-    Skills.astro           — grouped skill tags
-    Footer.astro           — copyright + small text links (same 4 destinations)
-  styles/global.css        — design tokens (CSS vars), resets, layout, shared utilities
+    ThemeToggle.astro      — inline dark/light toggle (lives in Nav)
+    About / Projects / Experience / Skills / Footer.astro
+  styles/global.css        — design tokens (CSS vars), resets, layout, .wrap/.prose, shared utilities
 public/
-  favicon.svg
+  favicon.svg, resume.pdf
 ```
-All components are presentation-only; they import their content from `src/data/cv.ts`.
+Components are presentation-only; CV content comes from `src/data/cv.ts`, blog content from Markdown.
 
 ## Layout
-Two-column on desktop: a `position: sticky` `.sidebar` (Hero + Skills, `--sidebar-w`
-300px, internal scroll if it exceeds viewport) beside a scrolling `.content`
-(About → Projects → Experience → Footer). Stacks to one column below 860px.
-Skills uses a stacked group layout to fit the narrow sidebar. Order set in `index.astro`.
+- **Shell**: `Layout.astro` renders `<Nav>` (top, scrolls away) → `<main class="page">` slot → `<Footer>`.
+  Body is `--max-w` (1080px) centred. Reading pages use `.wrap` (760px); Markdown uses `.prose`.
+- **CV page only**: two-column — `position: sticky` `.sidebar` (Hero + Skills, `--sidebar-w` 300px,
+  internal scroll if it exceeds viewport) beside `.content` (About → Projects → Experience).
+  Stacks to one column below 860px.
+
+## Adding a blog post
+Create `src/content/blog/<slug>.md` with frontmatter (`title`, `description`, `date`,
+optional `tags`, `draft`). URL is `/blog/<slug>`. `draft: true` hides it from lists and routes.
 
 ## Design tokens (global.css)
 | Token          | Value      | Use                       |

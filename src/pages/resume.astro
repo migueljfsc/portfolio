@@ -1,17 +1,11 @@
 ---
-// Print-only A4 résumé. Self-contained (no site layout/fonts) so it renders
-// deterministically to PDF via scripts/generate-pdf.mjs. Content from cv.ts.
+// Print-only A4 résumé (PDF source). Two-column: header band, then left rail
+// (contact / skills / education) + right column (profile / experience).
+// Self-contained styles; content from cv.ts. Rendered via scripts/generate-pdf.mjs.
 import { profile, about, experience, education, skills } from '../data/cv';
 
 const strip = (url: string) =>
   url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
-
-const contacts = [
-  profile.location,
-  profile.email,
-  strip(profile.github),
-  strip(profile.linkedin),
-];
 ---
 
 <html lang="en">
@@ -23,64 +17,74 @@ const contacts = [
     <header class="head">
       <h1>{profile.name}</h1>
       <p class="title">{profile.title}</p>
-      <p class="contacts">{contacts.join("  ·  ")}</p>
     </header>
 
-    <section>
-      <h2>Profile</h2>
-      {about.map(p => <p class="para">{p}</p>)}
-    </section>
+    <div class="cols">
+      <aside class="rail">
+        <section>
+          <h2>Contact</h2>
+          <p class="c-line">{profile.location}</p>
+          <p class="c-line">{profile.email}</p>
+          <p class="c-line">{strip(profile.github)}</p>
+          <p class="c-line">{strip(profile.linkedin)}</p>
+        </section>
 
-    <section>
-      <h2>Experience</h2>
-      {experience.map(role => (
-        <div class="entry">
-          <div class="entry-head">
-            <span class="entry-title">{role.title} · {role.company}</span>
-            <span class="entry-period">{role.period}</span>
-          </div>
-          <ul>
-            {role.bullets.map(b => <li>{b}</li>)}
-          </ul>
-        </div>
-      ))}
-    </section>
+        <section>
+          <h2>Skills</h2>
+          {skills.map(group => (
+            <div class="skill">
+              <p class="skill-cat">{group.category}</p>
+              <p class="skill-items">{group.items.join(", ")}</p>
+            </div>
+          ))}
+        </section>
 
-    <section>
-      <h2>Education</h2>
-      {education.map(role => (
-        <div class="entry">
-          <div class="entry-head">
-            <span class="entry-title">{role.title} · {role.company}</span>
-            <span class="entry-period">{role.period}</span>
-          </div>
-          <ul>
-            {role.bullets.map(b => <li>{b}</li>)}
-          </ul>
-        </div>
-      ))}
-    </section>
+        <section>
+          <h2>Education</h2>
+          {education.map(ed => (
+            <div class="entry">
+              <p class="entry-title">{ed.title}</p>
+              <p class="entry-sub">{ed.company}</p>
+              <p class="entry-period">{ed.period}</p>
+              <ul>
+                {ed.bullets.map(b => <li>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </section>
+      </aside>
 
-    <section>
-      <h2>Skills</h2>
-      {skills.map(group => (
-        <p class="skill-row">
-          <span class="skill-cat">{group.category}</span>
-          <span>{group.items.join(", ")}</span>
-        </p>
-      ))}
-    </section>
+      <main class="main">
+        <section>
+          <h2>Profile</h2>
+          {about.map(p => <p class="para">{p}</p>)}
+        </section>
+
+        <section>
+          <h2>Experience</h2>
+          {experience.map(role => (
+            <div class="entry">
+              <p class="entry-title">{role.title} · {role.company}</p>
+              <p class="entry-period">{role.period}</p>
+              <ul>
+                {role.bullets.map(b => <li>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </section>
+      </main>
+    </div>
   </body>
 </html>
 
 <style>
-  @page { size: A4; margin: 0; }
+  @page { size: A4; }
 
   :root {
-    --ink: #1a1a1a;
-    --muted: #555;
-    --accent: #4f6f52;
-    --rule: #d8d8d8;
+    --ink: #1f1f1f;
+    --muted: #666;
+    --accent: #2f6690;   /* matches site light-theme accent (blue) */
+    --rule: #dcdcdc;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,80 +92,90 @@ const contacts = [
   body {
     font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
     color: var(--ink);
-    font-size: 10.5pt;
-    line-height: 1.4;
+    font-size: 9.2pt;
+    line-height: 1.3;
     background: #fff;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  .head { margin-bottom: 14px; }
+  /* Header band */
+  .head {
+    padding-bottom: 9px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 13px;
+  }
 
   h1 {
-    font-size: 22pt;
+    font-size: 21pt;
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--accent);
+    line-height: 1.1;
   }
 
   .title {
     font-size: 11pt;
     font-weight: 600;
     color: var(--ink);
-    margin-top: 1px;
+    margin-top: 2px;
   }
 
-  .contacts {
-    font-size: 8.7pt;
-    color: var(--muted);
-    margin-top: 5px;
+  /* Two columns */
+  .cols {
+    display: flex;
+    align-items: flex-start;
+    gap: 26px;
   }
 
-  section { margin-top: 14px; }
+  .rail { flex: 0 0 33%; }
+  .main { flex: 1 1 auto; min-width: 0; }
+
+  section { margin-bottom: 10px; }
+  section:last-child { margin-bottom: 0; }
 
   h2 {
-    font-size: 9pt;
+    font-size: 8.3pt;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.1em;
     color: var(--accent);
-    padding-bottom: 3px;
+    padding-bottom: 2px;
     border-bottom: 1px solid var(--rule);
-    margin-bottom: 7px;
+    margin-bottom: 6px;
   }
 
-  .para { margin-bottom: 4px; }
-
-  .entry { margin-bottom: 9px; break-inside: avoid; }
-
-  .entry-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-  }
-
-  .entry-title { font-weight: 600; font-size: 10.5pt; }
-
-  .entry-period {
-    font-size: 8.7pt;
+  /* Contact */
+  .c-line {
     color: var(--muted);
-    white-space: nowrap;
+    font-size: 9pt;
+    margin-bottom: 2px;
+    overflow-wrap: anywhere;
   }
 
-  .entry ul { margin-top: 3px; padding-left: 15px; }
+  /* Skills */
+  .skill { margin-bottom: 7px; }
+  .skill:last-child { margin-bottom: 0; }
+  .skill-cat { font-weight: 700; color: var(--accent); font-size: 9pt; }
+  .skill-items { color: var(--ink); font-size: 9pt; }
 
-  .entry li { margin-bottom: 2px; }
+  /* Profile */
+  .para { margin-bottom: 4px; }
+  .para:last-child { margin-bottom: 0; }
 
-  .skill-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 3px;
+  /* Entries (experience + education) */
+  .entry { margin-bottom: 7px; break-inside: avoid; }
+  .entry:last-child { margin-bottom: 0; }
+
+  .entry-title { font-weight: 700; font-size: 9.6pt; }
+  .entry-sub { font-size: 8.7pt; color: var(--ink); }
+  .entry-period {
+    font-size: 8.2pt;
+    color: var(--muted);
+    margin: 1px 0 2px;
   }
 
-  .skill-cat {
-    flex: 0 0 110px;
-    font-weight: 600;
-    color: var(--accent);
-  }
+  ul { padding-left: 14px; }
+  li { margin-bottom: 1.5px; }
+  .rail li { font-size: 8.7pt; }
 </style>

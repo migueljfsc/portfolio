@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { profile } from '../data/cv';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = profile.name,
+  description = `${profile.name} — ${profile.title} based in ${profile.location}`,
+} = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <script is:inline>
+      // Set theme before first paint to avoid flash.
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var sysLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          document.documentElement.dataset.theme = saved || (sysLight ? 'light' : 'dark');
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <Nav />
+    <main class="page">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Scroll-reveal: elements rise in as they enter the viewport, with a
+      // small stagger between siblings sharing the same parent.
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            const el = e.target as HTMLElement;
+            const siblings = Array.from(
+              el.parentElement?.querySelectorAll(':scope > .reveal') ?? []
+            );
+            const i = Math.max(0, siblings.indexOf(el));
+            el.style.transitionDelay = `${Math.min(i, 6) * 70}ms`;
+            el.classList.add('in-view');
+            io.unobserve(el);
+          }
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // Pointer-tracking glow on project cards.
+      document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+        card.addEventListener('pointermove', (ev) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+          card.style.setProperty('--my', `${ev.clientY - r.top}px`);
+        });
+      });
+    </script>
+  </body>
+</html>

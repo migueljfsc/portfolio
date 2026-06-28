@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+<Layout title={`${post.data.title} — Miguel Cardoso`} description={post.data.description}>
+  <article class="wrap prose reveal">
+    <a class="back" href="/blog">← Blog</a>
+    <h1>{post.data.title}</h1>
+    <p class="post-meta">
+      {fmt(post.data.date)}
+      {post.data.tags.length > 0 && <span> · {post.data.tags.join('  ·  ')}</span>}
+    </p>
+    <Content />
+  </article>
+</Layout>
+
+<style>
+  .back {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+  .back:hover { color: var(--accent); opacity: 1; }
+
+  .post-meta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin: 0.4rem 0 2.5rem;
+  }
+  .post-meta span { color: var(--accent); }
+</style>

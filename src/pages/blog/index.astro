@@ -1,0 +1,51 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+<Layout title="Blog — Miguel Cardoso" description="Writing on infrastructure, DevOps, and side projects.">
+  <section class="wrap">
+    <h1 class="page-title reveal">Blog</h1>
+    <ul class="post-list">
+      {posts.map(p => (
+        <li class="reveal">
+          <a class="post" href={`/blog/${p.id}`}>
+            <span class="post-date">{fmt(p.data.date)}</span>
+            <span class="post-title">{p.data.title}</span>
+            <span class="post-desc">{p.data.description}</span>
+            {p.data.tags.length > 0 && (
+              <span class="post-tags">{p.data.tags.join('  ·  ')}</span>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .post-list { list-style: none; display: flex; flex-direction: column; gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; }
+
+  .post {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+    padding: 1.25rem 1.4rem;
+    background: var(--bg-card);
+    color: inherit;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .post:hover { background: var(--bg-hover); opacity: 1; box-shadow: inset 0 0 0 1px var(--border-lit); }
+
+  .post-date { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); }
+  .post-title { font-family: var(--mono); font-size: 1rem; font-weight: 600; color: var(--text); }
+  .post-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+  .post-tags { font-family: var(--mono); font-size: 0.68rem; color: var(--accent); margin-top: 0.2rem; }
+</style>

@@ -23,7 +23,7 @@ try {
     path: outPath,
     format: "A4",
     printBackground: true,
-    margin: { top: "14mm", bottom: "14mm", left: "14mm", right: "14mm" },
+    margin: { top: "16mm", bottom: "16mm", left: "16mm", right: "16mm" },
   });
   console.log(`✓ Wrote ${path.relative(root, outPath)}`);
 } finally {
