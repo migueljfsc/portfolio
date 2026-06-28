@@ -39,7 +39,7 @@ export const profile: Profile = {
   title: "DevOps / Infrastructure Engineer",
   location: "Porto, Portugal",
   email: "migueljfscardoso@gmail.com",
-  github: "https://github.com/Migueljfs",
+  github: "https://github.com/migueljfsc",
   linkedin: "https://www.linkedin.com/in/miguel-cardoso-32428314b/",
   resume: "/resume.pdf",
 };
