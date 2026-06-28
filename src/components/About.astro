@@ -1,0 +1,25 @@
+---
+import { about } from '../data/cv';
+---
+<section>
+  <p class="section-label reveal">About</p>
+
+  <div class="about-body reveal">
+    {about.map(paragraph => <p>{paragraph}</p>)}
+  </div>
+</section>
+
+<style>
+  .about-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 56ch;
+  }
+
+  .about-body p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--text-muted);
+  }
+</style>

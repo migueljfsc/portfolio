@@ -1,0 +1,28 @@
+---
+import SocialLinks from './SocialLinks.astro';
+import { profile } from '../data/cv';
+---
+<header class="hero">
+  <h1 class="hero-name reveal">{profile.name}</h1>
+
+  <div class="reveal">
+    <SocialLinks />
+  </div>
+</header>
+
+<style>
+  .hero {
+    padding-top: 0;
+  }
+
+  .hero-name {
+    font-size: clamp(2rem, 3.2vw, 2.7rem);
+    line-height: 1.08;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(120deg, var(--name-start) 18%, var(--accent) 58%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+</style>

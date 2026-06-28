@@ -1,0 +1,38 @@
+---
+import { profile } from '../data/cv';
+const year = new Date().getFullYear();
+---
+<footer class="reveal">
+  <span class="copyright">© {year} {profile.name}</span>
+  <nav class="footer-links">
+    <a href={profile.github} target="_blank" rel="noopener">GitHub</a>
+    <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+    <a href={`mailto:${profile.email}`}>Email</a>
+    <a href={profile.resume} target="_blank" rel="noopener">Résumé</a>
+  </nav>
+</footer>
+
+<style>
+  footer {
+    margin-top: var(--section-gap);
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  footer a { color: var(--text-muted); }
+  footer a:hover { color: var(--accent); opacity: 1; }
+</style>

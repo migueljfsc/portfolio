@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import Hero from '../components/Hero.astro';
+import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+import Footer from '../components/Footer.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Miguel Cardoso — DevOps / Infrastructure Engineer based in Porto, Portugal" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Miguel Cardoso</title>
+    <script is:inline>
+      // Set theme before first paint to avoid flash.
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var sysLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          document.documentElement.dataset.theme = saved || (sysLight ? 'light' : 'dark');
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <ThemeToggle />
+    <div class="layout">
+      <aside class="sidebar">
+        <Hero />
+        <Skills />
+      </aside>
+      <main class="content">
+        <About />
+        <Projects />
+        <Experience />
+        <Footer />
+      </main>
+    </div>
+
+    <script>
+      // Scroll-reveal: fade elements up as they enter the viewport.
+      const els = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in-view');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+      );
+      els.forEach((el) => io.observe(el));
+
+      // Pointer-tracking glow on project cards.
+      document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+        card.addEventListener('pointermove', (ev) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+          card.style.setProperty('--my', `${ev.clientY - r.top}px`);
+        });
+      });
+    </script>
+  </body>
+</html>

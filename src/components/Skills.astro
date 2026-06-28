@@ -1,0 +1,66 @@
+---
+import { skills } from '../data/cv';
+---
+
+<section>
+  <p class="section-label reveal">Skills</p>
+
+  <div class="skills-list">
+    {skills.map(group => (
+      <div class="skill-group reveal">
+        <span class="skill-category">{group.category}</span>
+        <ul class="skill-items">
+          {group.items.map(item => <li>{item}</li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  /* Stacked layout — category label above its chips (fits narrow sidebar) */
+  .skill-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .skill-category {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .skill-items {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .skill-items li {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--text);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.55rem;
+    border-radius: 5px;
+    transition: border-color 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+  }
+
+  .skill-items li:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: var(--glow);
+    transform: translateY(-2px);
+  }
+</style>
