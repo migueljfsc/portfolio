@@ -14,8 +14,10 @@ content there, never inline in components. Exports: `profile`, `about`, `experie
 
 **Outputs:**
 - **Website** — components consume `cv.ts` directly. ✅ done.
-- **PDF**: ⬜ not yet built. Generate from the same data — dedicated print stylesheet +
-  headless print, or a `/resume` route rendered to PDF. Output to `public/resume.pdf`.
+- **PDF**: ✅ `pnpm pdf` builds the site then renders the print-only `/resume` route
+  (`src/pages/resume.astro`, A4, self-contained styles from `cv.ts`) to
+  `public/resume.pdf` via headless Chromium (`scripts/generate-pdf.mjs`, Playwright dev dep).
+  The Résumé button links to `/resume.pdf`. Regenerate after any `cv.ts` content change.
 - **LinkedIn**: ⚠️ no public write API for personal profiles — this leg is **assisted, not
   automated**. Generate updated headline/about/experience text from `cv.ts` for Miguel
   to paste in. Do not claim it auto-syncs.
@@ -31,6 +33,7 @@ content there, never inline in components. Exports: `profile`, `about`, `experie
 src/
   data/cv.ts               — CANONICAL content (profile, about, experience, education, skills, projects)
   pages/index.astro        — single-page entry; .layout = sticky .sidebar + .content
+  pages/resume.astro       — print-only A4 résumé (PDF source); self-contained styles
   components/
     Hero.astro             — sidebar: name + SocialLinks
     SocialLinks.astro      — 4 icon buttons (GitHub/LinkedIn/Email/Résumé), hrefs from profile
@@ -77,6 +80,7 @@ All content lives in `src/data/cv.ts` — no CMS, no inline arrays in components
 pnpm dev        # dev server at localhost:4321
 pnpm build      # static output to dist/
 pnpm preview    # preview built output
+pnpm pdf        # build + render /resume to public/resume.pdf
 ```
 
 ## Deployment target
