@@ -8,10 +8,10 @@
 
 :root {
   /* Dark theme (default) — deep navy base, light text + sky accent */
-  --bg:          #16425b;
-  --bg-card:     #1c4d68;
-  --bg-hover:    #245d7a;
-  --border:      #2c5e78;
+  --bg:          #0d2230;
+  --bg-card:     #14303f;
+  --bg-hover:    #1c3c4d;
+  --border:      #25485b;
   --border-lit:  #3a7ca5;
   --text:        #d9dcd6;
   --text-muted:  #a6bac3;
