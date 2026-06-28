@@ -1,5 +1,6 @@
 ---
 import { profile } from '../data/cv';
+import { u } from '../lib/url';
 const year = new Date().getFullYear();
 ---
 <footer class="reveal">
@@ -8,7 +9,7 @@ const year = new Date().getFullYear();
     <a href={profile.github} target="_blank" rel="noopener">GitHub</a>
     <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
     <a href={`mailto:${profile.email}`}>Email</a>
-    <a href={profile.resume} target="_blank" rel="noopener">Résumé</a>
+    <a href={u(profile.resume)} target="_blank" rel="noopener">Résumé</a>
   </nav>
 </footer>
 

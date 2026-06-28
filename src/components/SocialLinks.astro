@@ -1,5 +1,6 @@
 ---
 import { profile } from '../data/cv';
+import { u } from '../lib/url';
 ---
 <nav class="social-links">
   <a href={profile.github} target="_blank" rel="noopener" aria-label="GitHub">
@@ -14,7 +15,7 @@ import { profile } from '../data/cv';
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 4H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h20a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Zm-1.4 2L12 12.06 3.4 6h17.2ZM3 18V7.27l8.43 5.94a1 1 0 0 0 1.14 0L21 7.27V18H3Z"/></svg>
     <span>Email</span>
   </a>
-  <a href={profile.resume} target="_blank" rel="noopener" aria-label="Résumé">
+  <a href={u(profile.resume)} target="_blank" rel="noopener" aria-label="Résumé">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-.5 1.5L18.5 8H14a.5.5 0 0 1-.5-.5V3.5ZM8 12.5h8V14H8v-1.5Zm0 3.2h8v1.5H8v-1.5ZM8 9.3h3.5v1.5H8V9.3Z"/></svg>
     <span>Résumé</span>
   </a>

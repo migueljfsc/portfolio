@@ -4,6 +4,7 @@ import SocialLinks from '../components/SocialLinks.astro';
 import Projects from '../components/Projects.astro';
 import { profile, about } from '../data/cv';
 import { getCollection } from 'astro:content';
+import { u } from '../lib/url';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
@@ -33,7 +34,7 @@ const fmt = (d: Date) =>
     <ul class="posts">
       {posts.map(p => (
         <li class="reveal">
-          <a class="post" href={`/blog/${p.id}`}>
+          <a class="post" href={u(`blog/${p.id}`)}>
             <span class="post-date">{fmt(p.data.date)}</span>
             <span class="post-title">{p.data.title}</span>
             <span class="post-desc">{p.data.description}</span>
@@ -41,11 +42,11 @@ const fmt = (d: Date) =>
         </li>
       ))}
     </ul>
-    <a class="view-all reveal" href="/blog">all posts →</a>
+    <a class="view-all reveal" href={u('blog')}>all posts →</a>
   </section>
 
   <div class="home-block">
-    <Projects heading="Featured projects" limit={2} viewAllHref="/projects" />
+    <Projects heading="Featured projects" limit={2} viewAllHref={u('projects')} />
   </div>
 </Layout>
 

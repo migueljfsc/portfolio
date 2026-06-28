@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
+import { u } from '../../lib/url';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -15,7 +16,7 @@ const fmt = (d: Date) =>
 ---
 <Layout title={`${post.data.title} — Miguel Cardoso`} description={post.data.description}>
   <article class="wrap prose reveal">
-    <a class="back" href="/blog">← Blog</a>
+    <a class="back" href={u('blog')}>← Blog</a>
     <h1>{post.data.title}</h1>
     <p class="post-meta">
       {fmt(post.data.date)}
