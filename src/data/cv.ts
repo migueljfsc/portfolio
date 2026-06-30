@@ -144,31 +144,10 @@ export const skills: SkillGroup[] = [
 
 export const projects: Project[] = [
   {
-    name: "k8s-dashboard",
-    description: "Lightweight read-only Kubernetes dashboard built with Go and HTMX. No JS frameworks, no dependencies.",
-    tags: ["Go", "HTMX", "Kubernetes"],
-    href: "#",
-    wip: false,
-  },
-  {
-    name: "tfstate-diff",
-    description: "CLI tool that diffs Terraform state files and highlights drift between environments.",
-    tags: ["Go", "Terraform", "CLI"],
-    href: "#",
-    wip: false,
-  },
-  {
-    name: "gitops-bootstrap",
-    description: "Opinionated FluxCD + Kubernetes bootstrap template for production-ready clusters.",
-    tags: ["FluxCD", "Helm", "Kubernetes"],
-    href: "#",
-    wip: false,
-  },
-  {
-    name: "dev-env",
-    description: "My dotfiles and dev environment setup — Neovim, tmux, zsh. Built for reproducibility.",
-    tags: ["Shell", "Neovim", "tmux"],
-    href: "#",
+    name: "motorcycle-journey",
+    description: "A bilingual (EN/PT) site documenting a motorcycle journey — trips, tips & tricks, a bike catalog, and per-bike service logs. Built with Astro + Tailwind, deployed to GitHub Pages.",
+    tags: ["Astro", "Tailwind", "TypeScript", "GitHub Pages"],
+    href: "https://migueljfsc.github.io/motorcycle-journey/",
     wip: false,
   },
 ];
