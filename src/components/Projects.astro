@@ -14,19 +14,23 @@ const list = limit ? projects.slice(0, limit) : projects;
   <p class="section-label reveal">{heading}</p>
 
   <div class="projects-grid reveal">
-    {list.map(p => (
-      <a class="card" href={p.href} target="_blank" rel="noopener">
-        <div class="card-header">
-          <span class="card-name">{p.name}</span>
-          {p.wip && <span class="wip-badge">WIP</span>}
-          <span class="card-arrow">↗</span>
-        </div>
-        <p class="card-desc">{p.description}</p>
-        <ul class="card-tags">
-          {p.tags.map(t => <li>{t}</li>)}
-        </ul>
-      </a>
-    ))}
+    {list.map(p => {
+      const Tag = p.href ? 'a' : 'div';
+      const linkProps = p.href ? { href: p.href, target: '_blank', rel: 'noopener' } : {};
+      return (
+        <Tag class:list={['card', { placeholder: !p.href }]} {...linkProps}>
+          <div class="card-header">
+            <span class="card-name">{p.name}</span>
+            {p.wip && <span class="wip-badge">WIP</span>}
+            {p.href && <span class="card-arrow">↗</span>}
+          </div>
+          <p class="card-desc">{p.description}</p>
+          <ul class="card-tags">
+            {p.tags.map(t => <li>{t}</li>)}
+          </ul>
+        </Tag>
+      );
+    })}
   </div>
 
   {viewAllHref && (
@@ -83,6 +87,19 @@ const list = limit ? projects.slice(0, limit) : projects;
     opacity: 1;
   }
   .card:hover::before { opacity: 1; }
+
+  /* "more coming soon" placeholder — not a link, muted, dashed */
+  .card.placeholder {
+    cursor: default;
+    border: 1px dashed var(--border-lit);
+    background: transparent;
+  }
+  .card.placeholder:hover {
+    background: transparent;
+    box-shadow: none;
+  }
+  .card.placeholder::before { display: none; }
+  .card.placeholder .card-name { color: var(--text-muted); }
 
   .card-header {
     display: flex;

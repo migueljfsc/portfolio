@@ -26,6 +26,7 @@ const fmt = (d: Date) =>
       </svg>
     </h1>
     <p class="lede reveal">{profile.title}. {about[0]}</p>
+    <p class="lede lede-sub reveal">{about[2]}</p>
     <div class="reveal"><SocialLinks /></div>
   </section>
 
@@ -99,6 +100,10 @@ const fmt = (d: Date) =>
     line-height: 1.7;
     color: var(--text-muted);
     margin-bottom: 2rem;
+  }
+  .lede-sub {
+    font-size: 1rem;
+    margin-top: -1.25rem;
   }
 
   .home-block { margin-top: 4rem; }

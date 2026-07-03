@@ -150,4 +150,11 @@ export const projects: Project[] = [
     href: "https://migueljfsc.github.io/motorcycle-journey/",
     wip: false,
   },
+  {
+    name: "more coming soon",
+    description: "New side projects are in the pipeline — infrastructure tooling, automation experiments, and a few things I'm tinkering with. Check back soon.",
+    tags: ["DevOps", "Automation", "Tinkering"],
+    href: "",
+    wip: false,
+  },
 ];
