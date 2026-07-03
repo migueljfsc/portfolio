@@ -130,7 +130,7 @@ export const skills: SkillGroup[] = [
   },
   {
     category: "AI",
-    items: ["AI-Assisted Workflows", "LLM APIs", "Prompt Engineering", "AI Agents"],
+    items: ["AI-Assisted Engineering", "LLM APIs", "Prompt Engineering", "AI Agents"],
   },
   {
     category: "Observability",
