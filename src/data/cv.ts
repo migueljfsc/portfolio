@@ -154,7 +154,7 @@ export const projects: Project[] = [
     name: "aws-app-platform",
     description: "An AWS application platform built with OpenTofu — reusable modules (ECS, RDS, ElastiCache, S3, SNS, ECR) and per-environment implementations (ACM, ALB, network, Route53, WAF, IAM), wired up with per-component CI and automated dependency updates.",
     tags: ["OpenTofu", "Terraform", "AWS", "IaC", "GitHub Actions"],
-    href: "",
+    href: "https://github.com/migueljfsc/aws-app-platform",
     wip: true,
   },
   {
