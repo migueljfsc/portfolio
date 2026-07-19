@@ -145,7 +145,7 @@ export const skills: SkillGroup[] = [
 export const projects: Project[] = [
   {
     name: "wtc",
-    description: "A vendor-neutral change ledger — \"git log for production\". A single self-hosted Go binary that ingests change events from GitHub, Flux, helm/terraform runs and manual changes, normalizes them into one schema, and answers what changed, where a commit is deployed, and how two environments differ. Ships a CLI, JSON API, embedded timeline and a React portal, packaged as a container, Helm chart, and static binaries.",
+    description: "A vendor-neutral change ledger — \"git log for production\". A self-hosted Go binary that pulls change events from CI, GitOps, and manual runs into one timeline, so you can see what changed, where a commit is deployed, and how two environments differ.",
     tags: ["Go", "SQLite", "Kubernetes", "GitOps", "React"],
     href: "https://github.com/migueljfsc/wtc",
     wip: true,
