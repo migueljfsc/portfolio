@@ -144,6 +144,13 @@ export const skills: SkillGroup[] = [
 
 export const projects: Project[] = [
   {
+    name: "wtc",
+    description: "A vendor-neutral change ledger — \"git log for production\". A single self-hosted Go binary that ingests change events from GitHub, Flux, helm/terraform runs and manual changes, normalizes them into one schema, and answers what changed, where a commit is deployed, and how two environments differ. Ships a CLI, JSON API, embedded timeline and a React portal, packaged as a container, Helm chart, and static binaries.",
+    tags: ["Go", "SQLite", "Kubernetes", "GitOps", "React"],
+    href: "https://github.com/migueljfsc/wtc",
+    wip: true,
+  },
+  {
     name: "motorcycle-journey",
     description: "A bilingual (EN/PT) site documenting a motorcycle journey — trips, tips & tricks, a bike catalog, and per-bike service logs. Built with Astro + Tailwind, deployed to GitHub Pages.",
     tags: ["Astro", "Tailwind", "TypeScript", "GitHub Pages"],
