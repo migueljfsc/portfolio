@@ -5,15 +5,13 @@ date: 2026-07-12
 tags: ["go", "devops", "side-project"]
 ---
 
-Something breaks in prod and the first question is always the same. What changed?
+When something breaks in production, working out what changed takes longer than it should.
+The build is in CI, the merge is in GitHub, the reconcile is in Flux, and the config tweak
+somebody made by hand is in a Slack thread. Reassembling all of that into a timeline is
+manual work, and you're usually doing it while the incident is still open.
 
-Answering it usually means opening five tabs. CI for the build, GitHub for the merge, Flux
-for the reconcile, a Slack thread where someone mentions the config tweak they made at 4pm.
-The information exists. It's just spread across systems that don't talk to each other, and
-you're reassembling the timeline by hand while the incident is still running.
-
-wtc puts it in one place. It ingests change events from wherever they come from, normalizes
-them into a single schema, and answers three questions fast:
+wtc collects those events as they happen. It reads change events from each source,
+normalizes them into one schema, and answers three questions:
 
 ```bash
 wtc log --env prod --since 2h     # what changed?
@@ -21,54 +19,52 @@ wtc where 4f2a91c                 # where is this commit? build, merge, deploy p
 wtc diff staging prod             # how do these two differ right now?
 ```
 
-## Why build it
+## Why not buy one
 
-New Relic, Datadog and Harness all sell change tracking. It works well, and it's locked
-inside their platform, which means it sees what their agents see and it lasts as long as
-your contract does. I wanted something neutral that runs on infrastructure I control and
-reads from whatever sources I point it at.
+New Relic, Datadog and Harness all sell change tracking. The products are fine. They're
+also tied to the platform you bought them from, and they only know about what that platform
+observes. I wanted something I could run myself and point at whatever sources I have.
 
-So: one Go binary, SQLite underneath, no CGO so it cross compiles without drama.
-`wtc serve` is the daemon that owns the database. Every other subcommand is a thin HTTP
-client of it, and the CLI never opens the database file directly. That constraint sounds
-fussy but it's what keeps single-writer SQLite honest and makes the remote case work for
-free.
+It's a single Go binary with SQLite behind it, and no CGO, so cross-compiling stays simple.
+`wtc serve` is the daemon and it's the only process that opens the database. Every other
+subcommand talks to it over HTTP. Keeping that boundary strict is what makes the
+single-writer model hold up, and it also means the CLI can run from anywhere.
 
-## The parts that were actually hard
+## Deduplication
 
-Deduplication, first. Ingestion is at-least-once by design, because the alternative is
-losing events. GitHub reports the same workflow run three separate times as it moves
-through requested, in progress and completed. Flux re-emits on every reconcile, and a busy
-cluster will bury you in identical notifications. So every event carries a dedup key
-derived from source-side identifiers, never from arrival time, and writes upsert in place.
-One row per logical change no matter how many times it shows up. A lost webhook, a poller
-re-read and a Flux re-emit are all harmless replays of the same thing.
+Ingestion is at-least-once, since the alternative is dropping events. GitHub reports the
+same workflow run at requested, in progress and completed. Flux re-emits on every
+reconcile, which on a busy cluster is more or less constant.
 
-Then figuring out which environment an event belongs to. This is the actual product
-problem, and it's messier than it sounds: image tags encode the git sha in more than one
-convention, manifest paths vary per repo, and cluster names only sometimes match env names.
-Everything goes through an ordered rules engine, and when nothing matches, the event lands
-with a blank env and gets surfaced by `wtc doctor`. It never guesses. A tool that quietly
-files a prod deploy under staging is worse than one that admits it doesn't know.
+Every event carries a dedup key built from identifiers on the source side, never from
+arrival time, and writes upsert on that key. That gives one row per logical change no
+matter how many times it arrives. A redelivered webhook or a poller re-reading old data
+rewrites the row with the same content.
 
-## Fixtures before code
+## Environment inference
 
-Every normalizer is written against real payloads captured from real infrastructure.
-Running serve with `--capture-dir` dumps raw ingest bodies to disk, curated ones get frozen
-under `testdata/`, and the parser tests run against those. No normalizer merges without
-golden fixtures.
+This is the part I've reworked most. Image tags encode the git sha under more than one
+convention, manifest paths vary between repos, and cluster names match environment names
+only some of the time. Events go through an ordered set of rules, and if none of them
+match, the event is stored with an empty env and listed by `wtc doctor` for me to deal
+with. Nothing gets guessed, because a prod deploy filed under staging would be much harder
+to notice than a missing value.
 
-This one's a discipline thing. Documentation drifts from what services actually send, so a
-parser written from memory of the docs passes its own tests and then falls over on real
-traffic. Capturing first means the tests encode reality.
+## Fixtures
 
-## Where it's at
+Normalizers are written against payloads captured from real systems. Running serve with
+`--capture-dir` writes raw ingest bodies to disk, curated ones get frozen under `testdata/`,
+and the parser tests run from those.
 
-Ingest from GitHub, Flux, wrapped helm and terraform runs, and manual entries. The query
-commands work. There's an embedded timeline UI in the binary, a Helm chart, a container
-image and static builds. A richer React portal is partway done.
+Payload documentation tends to be incomplete or out of date, so a parser written from the
+docs can pass its own tests and still mishandle real traffic.
 
-Still a work in progress, but I run it against real clusters, which is the only test that
-counts.
+## Current state
+
+Ingest works for GitHub, Flux, wrapped helm and terraform runs, and manual records. The
+query commands are done. There's a timeline UI embedded in the binary, plus a Helm chart,
+a container image and prebuilt binaries. A larger React portal is partly built.
+
+Still in progress, and I've been running it against my own clusters as I go.
 
 [github.com/migueljfsc/wtc](https://github.com/migueljfsc/wtc)

@@ -1,54 +1,45 @@
 ---
 title: "A site for my motorcycle trips"
-description: "A small bilingual Astro site holding trip write-ups, a bike catalog, and service logs. Everything is a file."
+description: "A small bilingual Astro site holding trip write-ups, a bike catalog, and service logs."
 date: 2026-07-05
 tags: ["astro", "side-project"]
 ---
 
-I've been riding for a while and my notes kept scattering. Photos in one folder, a rough
-mental list of what I'd fixed and when, tips I'd picked up and then forgotten by the time
-they actually mattered, a bookmarks folder I never opened again. So I built somewhere to
-put all of it.
+I ride, and the record of it was scattered. Photos sat in one folder. Maintenance dates I
+mostly half-remembered. Tips I'd read somewhere and then couldn't find again when they
+were relevant. I wanted one place for the trips, the bikes, and what's been done to them.
 
-It's Astro and Tailwind, static output, deployed to GitHub Pages. Nothing exotic under the
-hood. The interesting decisions were about content, not stack.
+The site runs on Astro and Tailwind, builds to static files, and deploys to GitHub Pages.
+Most of the thought went into how content gets stored rather than any of that.
 
 ## Everything is a file
 
-The rule I set going in: adding content should never mean editing a page. Drop a Markdown
-file in the right folder and it shows up in the right places.
+I didn't want adding a trip to involve editing a page. Content goes in as Markdown and the
+site picks it up from there.
 
-Trips and tips are one file each under `src/content/`. Bikes are a file per bike, with
-specs, mods and photos in frontmatter. Service records break the pattern, because they're
-short, repetitive and there are a lot of them, so they live in a single `services.yaml`
-keyed by bike slug. Appending a row is a two-line diff, which is about the amount of
-friction a chain lube entry deserves.
+Trips and tips are one file each under `src/content/`. Each bike gets a file too, with
+specs, mods and photos in the frontmatter. Service records work differently. They're short
+and there are a lot of them, so they all live in a single `services.yaml`, keyed by bike
+slug. Adding one is about two lines.
 
-Anything with `draft: true` drops out of lists and routes. That's what I use when a trip
-write-up is half finished and I want to stop thinking about it for a week.
+Setting `draft: true` on anything keeps it out of the lists and routes until I'm ready for
+it to be there.
 
-## Bilingual without building the site twice
+## Two languages
 
-The site is English and Portuguese. English at the root, Portuguese under `/pt/`, using
-Astro's i18n routing. UI strings sit per locale in one file.
+English at the root, Portuguese under `/pt/`, using Astro's i18n routing. UI strings are
+defined per locale in one file.
 
-Content splits differently depending on what it is, and that's deliberate. Trips and tips
-get one file per language, because a trip write-up in Portuguese isn't a translation of
-the English one. Different phrasing, sometimes different details, occasionally a joke that
-only works in one of them. Bikes are a single file with localized fields, because a spec
-sheet is a spec sheet in both languages and keeping two copies in sync would be a chore
-I'd quietly abandon. Service records work the same way: one entry, localized description
-of the work.
+How content splits depends on the type. Trips and tips are one file per language. When I
+write up a trip in Portuguese it tends to come out different from the English version,
+different details, different length, so keeping them as separate documents is easier than
+maintaining a translation. Bikes are a single file with localized fields instead, since a
+spec sheet reads the same in both languages and two copies would drift. Service records
+follow the bikes: one entry, with the description of the work localized.
 
-The split follows how much the content actually differs between languages, rather than
-applying one rule everywhere.
+## Deploying
 
-## Shipping it
-
-Push to main, Actions builds, Pages serves. The site lives on a subpath so `base` is set
-in the Astro config, which is the one thing that bites you if you forget it. Dependabot
-opens update PRs weekly and I merge them when CI is green.
-
-It's a small site and it stays small. That's mostly the point.
+Push to main and Actions builds and publishes to Pages. The site sits on a subpath, so
+`base` has to be set in the Astro config. Dependabot opens dependency PRs weekly.
 
 [migueljfsc.github.io/motorcycle-journey](https://migueljfsc.github.io/motorcycle-journey/)
