@@ -151,6 +151,13 @@ export const projects: Project[] = [
     wip: true,
   },
   {
+    name: "pitchboard",
+    description: "An animated football tactics board that runs entirely in the browser — draw a formation, move players between scenes along curved runs, and export the result as MP4, GIF, or PNG with no server rendering. Connectors between groups of players are recomputed every frame, so a unit’s shape deforms as its members move apart.",
+    tags: ["React", "TypeScript", "Canvas", "Vite", "GitHub Pages"],
+    href: "https://migueljfsc.github.io/pitchboard/",
+    wip: true,
+  },
+  {
     name: "motorcycle-journey",
     description: "A bilingual (EN/PT) site documenting a motorcycle journey — trips, tips & tricks, a bike catalog, and per-bike service logs. Built with Astro + Tailwind, deployed to GitHub Pages.",
     tags: ["Astro", "Tailwind", "TypeScript", "GitHub Pages"],
