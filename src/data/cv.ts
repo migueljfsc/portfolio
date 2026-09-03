@@ -158,6 +158,13 @@ export const projects: Project[] = [
     wip: true,
   },
   {
+    name: "football-tracks",
+    description: "A computer-vision pipeline that turns a few seconds of broadcast football into player positions in pitch metres \u2014 the camera solved per frame from one seeded frame, players detected and tracked, kits clustered into two sides. The output feeds Pitchboard, so a play gets imported and corrected instead of drawn from nothing.",
+    tags: ["Python", "OpenCV", "RT-DETR", "NumPy", "Computer Vision"],
+    href: "https://github.com/migueljfsc/football-tracks",
+    wip: true,
+  },
+  {
     name: "motorcycle-journey",
     description: "A bilingual (EN/PT) site documenting a motorcycle journey — trips, tips & tricks, a bike catalog, and per-bike service logs. Built with Astro + Tailwind, deployed to GitHub Pages.",
     tags: ["Astro", "Tailwind", "TypeScript", "GitHub Pages"],
