@@ -1,15 +1,23 @@
 name: Deploy to Cloudflare
 
-# Builds the site and deploys it, with the www redirect in worker.js, to https://migueljfsc.dev.
+# Builds the site and deploys it as a static-assets Worker to https://migueljfsc.dev.
 #
-# Required repository secrets:
-#   CLOUDFLARE_API_TOKEN   — Account · Workers Scripts · Edit, and Zone · Workers Routes · Edit
-#                            on migueljfsc.dev (for the custom domains)
+# WHY WRANGLER AND NOT OPENTOFU. Deploying static assets is an upload of file hashes that ends
+# in a completion token Cloudflare expires after an hour; Terraform can neither produce it nor
+# hold it in state. The zone around the site — the www redirect — is OpenTofu, in
+# infrastructure/terraform/cloudflare, applied by terraform.yml.
+#
+# Required repository secrets (permissions in infrastructure/terraform/cloudflare/README.md):
+#   CLOUDFLARE_API_TOKEN
 #   CLOUDFLARE_ACCOUNT_ID
 
 on:
   push:
     branches: [main]
+    # The stack is terraform.yml's; changing it alone does not redeploy the site.
+    paths-ignore:
+      - "infrastructure/**"
+      - ".github/workflows/terraform.yml"
   workflow_dispatch:
 
 permissions:

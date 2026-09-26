@@ -1,25 +1,19 @@
 {
-  // The portfolio, served from the root of migueljfsc.dev. Deployed by
-  // .github/workflows/deploy.yml; locally only ever as `wrangler deploy --dry-run`.
+  // The portfolio, served from the root of migueljfsc.dev: static assets only, no Worker code.
+  // Deployed by .github/workflows/deploy.yml, never by hand. The www redirect and everything
+  // else about the zone is OpenTofu (infrastructure/terraform/cloudflare).
   "$schema": "https://unpkg.com/wrangler/config-schema.json",
   "name": "portfolio",
-  "main": "./worker.js",
   "compatibility_date": "2026-09-26",
 
-  // The apex and www both point here; the zone is on this account, and each custom domain
-  // brings its own DNS record and certificate.
-  "routes": [
-    { "pattern": "migueljfsc.dev", "custom_domain": true },
-    { "pattern": "www.migueljfsc.dev", "custom_domain": true }
-  ],
+  // The zone is on this account; the custom domain brings its own DNS record and certificate.
+  // It is declared here rather than in OpenTofu because wrangler reconciles a Worker's routes
+  // on every deploy, and two owners of one route would undo each other.
+  "routes": [{ "pattern": "migueljfsc.dev", "custom_domain": true }],
   "workers_dev": false,
 
   "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS",
-    // true so worker.js sees www requests before an asset answers them. Every request is then
-    // a Worker invocation against the account's 100k/day, which a portfolio does not approach.
-    "run_worker_first": true
+    "directory": "./dist"
   },
 
   "observability": { "enabled": true }

@@ -95,11 +95,18 @@ pnpm pdf        # build + render /resume to public/resume.pdf
 ```
 
 ## Deployment target
-Cloudflare Workers static assets at **https://migueljfsc.dev** (`wrangler.jsonc`), deployed by
-`.github/workflows/deploy.yml` on push to `main` (repo secrets `CLOUDFLARE_API_TOKEN`,
-`CLOUDFLARE_ACCOUNT_ID`). `worker.js` only redirects `www.` to the apex; every other request
-is `dist/` served as-is. The custom domains bring their own DNS records and certificates, so
-there are no DNS records to manage. The old GitHub Pages site is retired.
+Cloudflare, at **https://migueljfsc.dev**. Two halves, never mixed:
+- **The site** — a static-assets Worker with no code (`wrangler.jsonc`), deployed by
+  `.github/workflows/deploy.yml` on push to `main`. The apex custom domain lives in
+  `wrangler.jsonc` because wrangler reconciles a Worker's routes on every deploy. Never
+  `wrangler deploy` by hand.
+- **The zone around it** — OpenTofu in `infrastructure/terraform/cloudflare` (the `www` record
+  and the www → apex redirect rule, which is the zone's ONE dynamic-redirect ruleset), applied by
+  `.github/workflows/terraform.yml`. State in the shared `terraform-tfstate` R2 bucket, key
+  `portfolio/cloudflare/`.
+
+Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`,
+`R2_SECRET_ACCESS_KEY`. The old GitHub Pages site is retired.
 
 ## Constraints
 - No JS frameworks (React, Vue, Svelte) — Astro components only
