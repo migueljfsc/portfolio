@@ -108,4 +108,4 @@ The board, the animation, the links, the drawing tools, the 3D view and export a
 whatever you have open autosaves locally. The interface is in English and Portuguese.
 Infrastructure and storage for boards too large to fit in a link are what's left.
 
-[migueljfsc.github.io/pitchboard](https://migueljfsc.github.io/pitchboard/)
+[pitchboard.migueljfsc.dev](https://pitchboard.migueljfsc.dev)

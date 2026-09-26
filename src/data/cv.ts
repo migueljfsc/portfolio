@@ -153,8 +153,8 @@ export const projects: Project[] = [
   {
     name: "pitchboard",
     description: "An animated football tactics board that runs entirely in the browser — draw a formation, move players between scenes along curved runs, and export the result as MP4, GIF, or PNG with no server rendering. Connectors between groups of players are recomputed every frame, so a unit’s shape deforms as its members move apart.",
-    tags: ["React", "TypeScript", "Canvas", "Vite", "GitHub Pages"],
-    href: "https://migueljfsc.github.io/pitchboard/",
+    tags: ["React", "TypeScript", "Canvas", "Vite", "Cloudflare Workers"],
+    href: "https://pitchboard.migueljfsc.dev",
     wip: true,
   },
   {

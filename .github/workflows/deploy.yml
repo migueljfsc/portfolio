@@ -1,4 +1,11 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare
+
+# Builds the site and deploys it, with the www redirect in worker.js, to https://migueljfsc.dev.
+#
+# Required repository secrets:
+#   CLOUDFLARE_API_TOKEN   — Account · Workers Scripts · Edit, and Zone · Workers Routes · Edit
+#                            on migueljfsc.dev (for the custom domains)
+#   CLOUDFLARE_ACCOUNT_ID
 
 on:
   push:
@@ -7,34 +14,36 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Allow one concurrent deployment, skip runs queued in between.
+# Never let two deploys race; queue rather than cancel a half-finished one.
 concurrency:
-  group: pages
+  group: deploy
   cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Build with Astro
-        uses: withastro/action@v3
-        with:
-          node-version: 22
-        # package-manager auto-detected from pnpm-lock.yaml; pnpm version from packageManager.
-        # build runs `pnpm build` -> ./dist, uploaded as the pages artifact
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: cloudflare-production
+      url: https://migueljfsc.dev
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v4
+
+      # The pnpm version comes from packageManager in package.json.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.131.1"
+          command: deploy

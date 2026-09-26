@@ -95,8 +95,11 @@ pnpm pdf        # build + render /resume to public/resume.pdf
 ```
 
 ## Deployment target
-GitHub Pages (static). `astro.config.mjs` will need `site` and `base` set
-for GH Pages subdirectory hosting when the repo is created.
+Cloudflare Workers static assets at **https://migueljfsc.dev** (`wrangler.jsonc`), deployed by
+`.github/workflows/deploy.yml` on push to `main` (repo secrets `CLOUDFLARE_API_TOKEN`,
+`CLOUDFLARE_ACCOUNT_ID`). `worker.js` only redirects `www.` to the apex; every other request
+is `dist/` served as-is. The custom domains bring their own DNS records and certificates, so
+there are no DNS records to manage. The old GitHub Pages site is retired.
 
 ## Constraints
 - No JS frameworks (React, Vue, Svelte) — Astro components only
