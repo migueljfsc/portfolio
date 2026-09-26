@@ -9,7 +9,7 @@ I ride, and the record of it was scattered. Photos sat in one folder. Maintenanc
 mostly half-remembered. Tips I'd read somewhere and then couldn't find again when they
 were relevant. I wanted one place for the trips, the bikes, and what's been done to them.
 
-The site runs on Astro and Tailwind, builds to static files, and deploys to GitHub Pages.
+The site runs on Astro and Tailwind, builds to static files, and deploys to Cloudflare.
 Most of the thought went into how content gets stored rather than any of that.
 
 ## Everything is a file
@@ -42,4 +42,4 @@ follow the bikes: one entry, with the description of the work localized.
 Push to main and Actions builds and publishes to Pages. The site sits on a subpath, so
 `base` has to be set in the Astro config. Dependabot opens dependency PRs weekly.
 
-[migueljfsc.github.io/motorcycle-journey](https://migueljfsc.github.io/motorcycle-journey/)
+[moto-journey.migueljfsc.dev](https://moto-journey.migueljfsc.dev)
