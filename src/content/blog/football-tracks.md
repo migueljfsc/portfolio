@@ -73,7 +73,9 @@ detection part is solved and boring. Identity is where it goes wrong.
 
 ![Detection boxes with confidence scores on one broadcast frame](https://pub-3b4bfc0114394ce680518fa92ce65e1d.r2.dev/blog/football-tracks-detections.png)
 
-Two fifths of what comes back is photographers, staff and people in the crowd, so anything landing off the pitch gets dropped before tracking starts. Until it is, they compete for associations like everyone else.
+Two fifths of what comes back is photographers, staff and people in the crowd, so anything
+landing off the pitch gets dropped before tracking starts. Left in, they compete for
+associations like everyone else.
 
 Two things I'd have got backwards without measuring them.
 
@@ -137,5 +139,9 @@ It runs end to end from a terminal, one command per stage, every stage leaving a
 a picture behind it. What's left is the importer on the Pitchboard side that turns `tracks.json`
 into a board, and that can be built now, because ground truth already produces a real tracks
 file with no vision in the loop.
+
+*Update, September 2026: the importer shipped. Pitchboard now opens a `tracks.json` as a
+board, with who had the ball scene by scene, the passes and the shot. More in
+[Pitchboard, a month later](/blog/pitchboard-a-month-later/).*
 
 [github.com/migueljfsc/football-tracks](https://github.com/migueljfsc/football-tracks)

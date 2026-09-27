@@ -25,7 +25,7 @@ Everything runs in the browser, with no account and no server doing the renderin
 ## Setting up the board
 
 You pick a formation for each side and the players land in the right places. The shapes are
-generated from the notation rather than positioned by hand, so 4-2-3-1 and 4-4-2 are read as the
+generated from the notation instead of being positioned by hand, so 4-2-3-1 and 4-4-2 are read as the
 numbers they are, and each one brings its own links with it. Double-clicking a player renames or
 renumbers them, and a squad typed out once can be saved as a preset and dropped onto a later board.
 Each team gets a kit colour and a pattern.
@@ -92,7 +92,7 @@ shadow under each player.
 MP4, GIF or PNG, encoded in the browser. The same `drawBoard` function that paints the editor canvas
 runs in a worker against an offscreen one, so the export can't drift from what you previewed.
 
-GIF is a first-class option rather than a fallback, because a GIF is what actually pastes into a
+GIF is a first-class option, not a fallback, because a GIF is what actually pastes into a
 group chat. Its palette has to be quantised once across the whole animation. Do it per frame and
 the pitch greens crawl.
 
@@ -107,5 +107,8 @@ and you can fork it if you want to carry on from there.
 The board, the animation, the links, the drawing tools, the 3D view and export all work, and
 whatever you have open autosaves locally. The interface is in English and Portuguese.
 Infrastructure and storage for boards too large to fit in a link are what's left.
+
+*Update, September 2026: accounts, saved boards and a lot more have landed since. They're in
+[Pitchboard, a month later](/blog/pitchboard-a-month-later/).*
 
 [pitchboard.migueljfsc.dev](https://pitchboard.migueljfsc.dev)

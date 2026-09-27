@@ -11,7 +11,7 @@ somebody made by hand is in a Slack thread. Reassembling all of that into a time
 manual work, and you're usually doing it while the incident is still open.
 
 wtc collects those events as they happen. It reads change events from each source,
-normalizes them into one schema, and answers three questions:
+normalises them into one schema, and answers three questions:
 
 ```bash
 wtc log --env prod --since 2h     # what changed?

@@ -1,41 +1,38 @@
 ---
 title: "Hi, I'm Miguel"
-description: "A quick introduction — who I am, what I do, and what I get up to when I'm not working."
+description: "Who I am, what I work on, and what I do with the rest of the week."
 date: 2026-06-28
 tags: ["intro"]
 ---
 
-Hey — welcome to my corner of the internet. Since this is the first thing here,
-it feels right to start with an introduction.
+I'm Miguel. This is the first post here, so an introduction seems like the right place to
+start.
 
 ## Who I am
 
-I'm Miguel, a DevOps / Infrastructure engineer based in Porto, Portugal. I'm someone
-who enjoys figuring things out and learning along the way, and I like working with
-people and doing my part to keep things running smoothly.
+I'm a DevOps and infrastructure engineer in Porto, Portugal. I like working things out as I
+go, and I like working with people, which in this job mostly means keeping things running so
+everyone else doesn't have to think about them.
 
 ## What I do
 
-I work on the infrastructure side of software — Kubernetes, CI/CD, observability, and
-all the automation that keeps platforms running quietly in the background. Over the
-years I've run infrastructure for high-traffic platforms in online betting and luxury
-retail, migrated clouds, and built monitoring stacks from scratch. These days I'm
-working on an AI-first travel platform, leaning hard on AI-powered tooling along the way.
+My side of software is the part underneath it: Kubernetes, CI/CD pipelines, monitoring, and the
+automation that holds a platform together. I've run infrastructure for high-traffic sites in
+online betting and luxury retail, moved companies between clouds, and built monitoring stacks
+from nothing. At the moment I'm on an AI-first travel platform, and I lean on AI tooling a lot
+to get the work done.
 
-What I enjoy most is the same thing that drew me to this field in the first place:
-**automating and organising things**. Taking something messy and manual and turning it
-into something repeatable and boring — in the best possible way.
+What I enjoy most hasn't changed since I started. I like taking something messy and manual and
+turning it into something repeatable. Boring, in the good sense.
 
-## When I'm not working
+## Outside work
 
-I keep busy with a mix of hobbies: playing guitar, football and videogames, riding my
-motorcycle, hanging out with my cat, and hitting the gym to relax and recharge. I'm a
-big football fan — enough that I even coached a U10/11 academy team for a while.
+Guitar, football, video games, the gym, my motorcycle and my cat, in no fixed order. Football
+more than most of them: I coached an under-10/11 academy side for a while.
 
-## What this blog is
+## This blog
 
-A place to write things down — infra notes, build logs from side projects, and the
-occasional opinion. No fixed schedule, no fluff. If something here saves you an
-afternoon, that's a win.
+Notes from infrastructure work, build logs from side projects, and the odd opinion. I'll post
+when there's something worth writing down. If one of these saves you an afternoon, good.
 
-Thanks for stopping by.
+Thanks for reading.

@@ -17,7 +17,7 @@ still works without an account: you open it, draw, and the board autosaves in yo
 
 Signing in is optional, with Google or with an email and password. Once you do, boards are kept
 on the server and reachable from any browser, filed into folders that can sit inside other
-folders, so a season's work can be organised rather than scrolled through. Squad presets follow
+folders, so a season's work can be organised instead of scrolled through. Squad presets follow
 the account too. A saved board can be published to a short link that follows it as you keep
 editing, which sits alongside the original share link that carries the whole board inside the
 URL. That one hasn't changed and still needs nothing on a server.
@@ -68,8 +68,8 @@ split by what it affects, and pass timing shows up in the scene bar.
 ## From video
 
 Boards can now be imported from match footage. A separate project turns a broadcast clip into
-player positions, and Pitchboard turns those into a board you correct rather than draw from
-nothing: who had the ball scene by scene, the passes, the shot, and the kits measured from the
+player positions, and Pitchboard turns those into a board you correct, which beats drawing
+one from nothing: who had the ball scene by scene, the passes, the shot, and the kits measured from the
 clip. That side has [its own post](/blog/football-tracks/).
 
 ## A tour for the first visit
