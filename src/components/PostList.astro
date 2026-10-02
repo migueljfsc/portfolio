@@ -1,0 +1,70 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { u } from '../lib/url';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  showTags?: boolean;
+}
+const { posts, showTags = false } = Astro.props;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+<ul class="posts">
+  {posts.map(p => (
+    <li>
+      <a class="post" href={u(`blog/${p.id}`)}>
+        <time class="date" datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+        <span class="text">
+          <span class="title">{p.data.title}</span>
+          <span class="desc">{p.data.description}</span>
+          {showTags && p.data.tags.length > 0 && (
+            <span class="tags">{p.data.tags.map(t => `#${t}`).join(' ')}</span>
+          )}
+        </span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .posts { list-style: none; border-top: 1px solid var(--border); }
+  .posts > li { border-bottom: 1px solid var(--border); }
+
+  .post {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0.35rem 2rem;
+    padding: 1.35rem 1rem;
+    margin: 0 -1rem;
+    border-radius: 6px;
+    color: inherit;
+    transition: background 0.18s;
+  }
+  .post:hover { background: var(--bg-hover); }
+  .post:hover .title { color: var(--accent); }
+
+  .date {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    padding-top: 0.3rem;
+    white-space: nowrap;
+  }
+  .text { display: flex; flex-direction: column; gap: 0.3rem; }
+  .title {
+    font-size: var(--step-1);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    transition: color 0.15s;
+  }
+  .desc { color: var(--text-muted); line-height: 1.55; max-width: 64ch; }
+  .tags { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+  @media (max-width: 600px) {
+    .post { grid-template-columns: 1fr; }
+    .date { padding-top: 0; }
+  }
+</style>

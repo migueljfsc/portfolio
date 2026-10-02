@@ -3,39 +3,22 @@ import SocialLinks from './SocialLinks.astro';
 import { profile } from '../data/cv';
 ---
 <header class="hero">
-  <h1 class="hero-name reveal">{profile.name}</h1>
-
-  <div class="reveal">
-    <SocialLinks />
-  </div>
+  <h1 class="name">{profile.name}</h1>
+  <p class="role">{profile.title}<br />{profile.location}</p>
+  <SocialLinks />
 </header>
 
 <style>
-  .hero {
-    padding-top: 0;
+  .name {
+    font-size: var(--step-3);
+    font-weight: 750;
+    font-stretch: 80%;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
   }
-
-  .hero-name {
-    font-size: clamp(2rem, 3.2vw, 2.7rem);
-    line-height: 1.08;
-    margin-bottom: 1.5rem;
-    background: linear-gradient(
-      110deg,
-      var(--name-start) 8%,
-      var(--accent) 38%,
-      var(--accent-3) 64%,
-      var(--accent-2) 100%
-    );
-    background-size: 220% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: name-shift 9s ease-in-out infinite alternate;
-  }
-
-  @keyframes name-shift {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
+  .role {
+    margin: 0.9rem 0 1.5rem;
+    color: var(--text-muted);
+    line-height: 1.5;
   }
 </style>

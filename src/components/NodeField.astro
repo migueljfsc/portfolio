@@ -1,0 +1,183 @@
+---
+// Page backdrop: a faint triangular mesh. Near the pointer, points and edges
+// light up toward the accent colour and lean away from it.
+---
+<canvas class="node-field" aria-hidden="true"></canvas>
+
+<style>
+  .node-field {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.node-field');
+  const ctx = canvas?.getContext('2d');
+
+  if (canvas && ctx) {
+    const GAP = 30;
+    const RADIUS = 240;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointer = window.matchMedia('(pointer: fine)');
+
+    let w = 0, h = 0, dpr = 1;
+    let base = [0, 0, 0], hot = [0, 0, 0], meshAlpha = 0.06;
+    const target = { x: -9999, y: -9999 };
+    const cur = { x: -9999, y: -9999 };
+    let energy = 0;
+    let raf = 0;
+
+    const rgb = (name: string) => {
+      const probe = document.createElement('span');
+      probe.style.color = `var(${name})`;
+      document.body.appendChild(probe);
+      const m = getComputedStyle(probe).color.match(/\d+(\.\d+)?/g) ?? ['0', '0', '0'];
+      probe.remove();
+      return m.slice(0, 3).map(Number);
+    };
+
+    const readColors = () => {
+      base = rgb('--text-dim');
+      hot = rgb('--accent');
+      meshAlpha = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mesh-alpha')) || 0.06;
+    };
+
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    type Pt = { x: number; y: number; t: number };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      const r2 = RADIUS * RADIUS;
+
+      const rows: Pt[][] = [];
+      // Shift by whole row pairs so parity is stable and the mesh scrolls with the page.
+      const pair = GAP * 0.866 * 2;
+      const startY = GAP / 2 - (window.scrollY % pair);
+      for (let row = 0, y = startY; y < h + GAP; row++, y += GAP * 0.866) {
+        const offset = row % 2 ? GAP / 2 : 0;
+        const pts: Pt[] = [];
+        for (let x = offset; x < w + GAP; x += GAP) {
+          const dx = x - cur.x;
+          const dy = y - cur.y;
+          const d2 = dx * dx + dy * dy;
+          let t = 0;
+          if (d2 < r2) {
+            const k = 1 - Math.sqrt(d2) / RADIUS;
+            t = k * k * energy;
+          }
+          const push = t * 6;
+          const len = Math.sqrt(d2) || 1;
+          pts.push({ x: x + (dx / len) * push, y: y + (dy / len) * push, t });
+        }
+        rows.push(pts);
+      }
+
+      // Triangular lattice edges: right neighbour + the two neighbours in the next row.
+      const edges = (fn: (a: Pt, b: Pt) => void) => {
+        for (let r = 0; r < rows.length; r++) {
+          const row = rows[r];
+          const next = rows[r + 1];
+          const shift = r % 2 ? 0 : -1;
+          for (let i = 0; i < row.length; i++) {
+            const a = row[i];
+            if (row[i + 1]) fn(a, row[i + 1]);
+            if (!next) continue;
+            const l = next[i + shift];
+            const rr = next[i + shift + 1];
+            if (l) fn(a, l);
+            if (rr) fn(a, rr);
+          }
+        }
+      };
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = `rgba(${base[0]},${base[1]},${base[2]},${meshAlpha})`;
+      ctx.beginPath();
+      edges((a, b) => { ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); });
+      ctx.stroke();
+
+      if (energy > 0) {
+        edges((a, b) => {
+          const t = Math.min(a.t, b.t);
+          if (t < 0.02) return;
+          ctx.strokeStyle = `rgba(${hot[0]},${hot[1]},${hot[2]},${t * 0.6})`;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        });
+      }
+
+      for (const row of rows) {
+        for (const p of row) {
+          const c = base.map((b, i) => Math.round(b + (hot[i] - b) * p.t));
+          ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${0.22 + p.t * 0.78})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 1 + p.t * 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    };
+
+    let energyTarget = 0;
+
+    const tick = () => {
+      cur.x += (target.x - cur.x) * 0.18;
+      cur.y += (target.y - cur.y) * 0.18;
+      energy += (energyTarget - energy) * 0.12;
+      if (Math.abs(energyTarget - energy) < 0.01) energy = energyTarget;
+      const settled =
+        Math.abs(target.x - cur.x) < 0.5 &&
+        Math.abs(target.y - cur.y) < 0.5 &&
+        energy === energyTarget;
+      draw();
+      raf = settled ? 0 : requestAnimationFrame(tick);
+    };
+
+    const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
+
+    const interactive = () => finePointer.matches && !reduced.matches;
+
+    window.addEventListener('pointermove', (e) => {
+      if (!interactive()) return;
+      if (energy === 0) { cur.x = e.clientX; cur.y = e.clientY; }
+      energyTarget = 1;
+      target.x = e.clientX;
+      target.y = e.clientY;
+      kick();
+    }, { passive: true });
+
+    document.documentElement.addEventListener('pointerleave', () => {
+      energyTarget = 0;
+      kick();
+    });
+
+    // Glow fades out while scrolling; the next pointer move brings it back.
+    window.addEventListener('scroll', () => {
+      energyTarget = 0;
+      kick();
+    }, { passive: true });
+
+    window.addEventListener('resize', () => { resize(); draw(); });
+
+    new MutationObserver(() => { readColors(); draw(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    readColors();
+    resize();
+    draw();
+  }
+</script>

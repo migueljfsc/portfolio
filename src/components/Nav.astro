@@ -4,8 +4,7 @@ import ThemeToggle from './ThemeToggle.astro';
 import { u } from '../lib/url';
 
 const tabs = [
-  { label: 'Home', path: '/', href: u('') },
-  { label: 'Blog', path: '/blog', href: u('blog') },
+  { label: 'Writing', path: '/blog', href: u('blog') },
   { label: 'Projects', path: '/projects', href: u('projects') },
   { label: 'CV', path: '/cv', href: u('cv') },
 ];
@@ -20,13 +19,20 @@ cur = cur.replace(/\/$/, '') || '/';
 const isActive = (p: string) =>
   p === '/' ? cur === '/' : cur === p || cur.startsWith(p + '/');
 ---
-<nav class="nav">
-  <a class="brand" href={u('')}>{profile.name}</a>
+<nav class="nav" aria-label="Main">
+  <a class="brand" href={u('')} aria-current={isActive('/') ? 'page' : undefined}>
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="5" cy="12" r="3" />
+      <circle cx="19" cy="12" r="3" />
+      <path d="M8 12h8" />
+    </svg>
+    <span>{profile.name}</span>
+  </a>
   <div class="nav-right">
     <ul class="tabs">
       {tabs.map(t => (
         <li>
-          <a href={t.href} class:list={["tab", { active: isActive(t.path) }]}>
+          <a href={t.href} class:list={["tab", { active: isActive(t.path) }]} aria-current={isActive(t.path) ? 'page' : undefined}>
             {t.label}
           </a>
         </li>
@@ -42,46 +48,68 @@ const isActive = (p: string) =>
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 0.5rem 0 1.75rem;
-    margin-bottom: 1.5rem;
+    padding: 1.25rem 0;
   }
 
   .brand {
-    font-family: var(--mono);
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 650;
+    font-size: 1.02rem;
+    letter-spacing: -0.015em;
     color: var(--text);
   }
-  .brand:hover { color: var(--accent); opacity: 1; }
+  .mark {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    transition: transform 0.35s var(--ease-out);
+  }
+  .brand:hover .mark { transform: rotate(-12deg); }
 
   .nav-right {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 0.75rem;
   }
 
   .tabs {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.15rem;
     list-style: none;
   }
 
   .tab {
-    font-family: var(--mono);
-    font-size: 0.82rem;
+    position: relative;
+    display: block;
+    font-size: 0.94rem;
     color: var(--text-muted);
     padding: 0.4rem 0.7rem;
-    border-radius: 6px;
-    transition: color 0.18s, background 0.18s;
   }
-  .tab:hover { color: var(--accent); background: var(--bg-hover); opacity: 1; }
-  .tab.active { color: var(--accent); background: var(--bg-hover); }
+  .tab::after {
+    content: '';
+    position: absolute;
+    left: 0.7rem;
+    right: 0.7rem;
+    bottom: 0.1rem;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s var(--ease-out);
+  }
+  .tab:hover { color: var(--text); }
+  .tab:hover::after { transform: scaleX(0.4); }
+  .tab.active { color: var(--text); }
+  .tab.active::after { transform: scaleX(1); }
 
-  @media (max-width: 520px) {
-    .nav { flex-wrap: wrap; padding-bottom: 1.25rem; }
-    .nav-right { gap: 0.75rem; }
-    .tab { padding: 0.4rem 0.55rem; }
+  @media (max-width: 560px) {
+    .brand span { display: none; }
+    .tab { padding: 0.4rem 0.5rem; }
+    .tab::after { left: 0.5rem; right: 0.5rem; }
   }
 </style>

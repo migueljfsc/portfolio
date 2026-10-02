@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import NodeField from '../components/NodeField.astro';
 import { profile } from '../data/cv';
 import { u } from '../lib/url';
 
@@ -35,41 +36,13 @@ const {
     </script>
   </head>
   <body>
-    <Nav />
-    <main class="page">
-      <slot />
-    </main>
-    <Footer />
-
-    <script>
-      // Scroll-reveal: elements rise in as they enter the viewport, with a
-      // small stagger between siblings sharing the same parent.
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (!e.isIntersecting) continue;
-            const el = e.target as HTMLElement;
-            const siblings = Array.from(
-              el.parentElement?.querySelectorAll(':scope > .reveal') ?? []
-            );
-            const i = Math.max(0, siblings.indexOf(el));
-            el.style.transitionDelay = `${Math.min(i, 6) * 70}ms`;
-            el.classList.add('in-view');
-            io.unobserve(el);
-          }
-        },
-        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
-      );
-      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
-
-      // Pointer-tracking glow on project cards.
-      document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
-        card.addEventListener('pointermove', (ev) => {
-          const r = card.getBoundingClientRect();
-          card.style.setProperty('--mx', `${ev.clientX - r.left}px`);
-          card.style.setProperty('--my', `${ev.clientY - r.top}px`);
-        });
-      });
-    </script>
+    <NodeField />
+    <div class="shell">
+      <Nav />
+      <main class="page">
+        <slot />
+      </main>
+      <Footer />
+    </div>
   </body>
 </html>

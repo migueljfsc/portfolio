@@ -8,6 +8,8 @@ export interface Role {
   title: string;
   period: string;
   location: string;
+  /** One-line summary shown on the home-page career graph. */
+  highlight?: string;
   bullets: string[];
 }
 
@@ -32,6 +34,8 @@ export interface Profile {
   github: string;
   linkedin: string;
   resume: string;
+  headline: string;
+  summary: string;
 }
 
 export const profile: Profile = {
@@ -42,6 +46,8 @@ export const profile: Profile = {
   github: "https://github.com/migueljfsc",
   linkedin: "https://www.linkedin.com/in/miguel-cardoso-32428314b/",
   resume: "/resume.pdf",
+  headline: "I keep production boring.",
+  summary: "I'm Miguel, a DevOps engineer in Porto. I've spent eight years building and running the platforms behind betting, fashion and travel products — Kubernetes, GitOps, observability, and the automation that holds them together.",
 };
 
 export const about: string[] = [
@@ -56,6 +62,7 @@ export const experience: Role[] = [
     title: "DevOps Engineer",
     period: "2026 — Present",
     location: "Porto, PT",
+    highlight: "Kubernetes platform for an AI-first travel product",
     bullets: [
       "Building infrastructure for an AI-first travel platform covering accommodation, flights, and trip planning",
       "Designing and operating a microservice architecture on Kubernetes for scalability and independent service delivery",
@@ -68,6 +75,7 @@ export const experience: Role[] = [
     title: "DevOps Engineer",
     period: "2021 — 2026",
     location: "Porto, PT",
+    highlight: "Led the GCP → AWS migration for the largest U.S. horse-betting platform",
     bullets: [
       "Ran infrastructure for the largest online horse-betting platform in the U.S., serving millions of high-traffic users daily",
       "Led the platform's full migration from GCP to AWS across multiple Kubernetes clusters for global scale and resilience",
@@ -82,6 +90,7 @@ export const experience: Role[] = [
     title: "DevOps Engineer",
     period: "2019 — 2021",
     location: "Porto, PT",
+    highlight: "Scaled Azure infrastructure for a global luxury marketplace",
     bullets: [
       "Supported and scaled infrastructure for a global luxury-fashion marketplace serving millions of users",
       "Automated large-scale deployments on Azure with Terraform and Docker",
@@ -94,6 +103,7 @@ export const experience: Role[] = [
     title: "DevOps Intern / Junior Full-Stack Developer",
     period: "2018 — 2019",
     location: "Porto, PT",
+    highlight: "Built a fully automated CI/CD proof of concept",
     bullets: [
       "Built a CI/CD proof-of-concept that delivered fully automated builds and deployments",
       "Developed full-stack features — frontend, backend APIs, and database design — for a real-time road-incident platform",

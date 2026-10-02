@@ -3,5 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Projects from '../components/Projects.astro';
 ---
 <Layout title="Projects — Miguel Cardoso" description="Things I've built — tools, infrastructure, and experiments.">
-  <Projects heading="Projects" />
+  <header class="page-head">
+    <h1 class="page-title">Projects</h1>
+    <p class="page-sub">Tools, infrastructure and experiments I build outside work. Most are open source; a few are running live.</p>
+  </header>
+  <Projects />
 </Layout>

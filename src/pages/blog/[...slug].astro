@@ -15,12 +15,12 @@ const fmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 <Layout title={`${post.data.title} — Miguel Cardoso`} description={post.data.description}>
-  <article class="wrap prose reveal">
-    <a class="back" href={u('blog')}>← Blog</a>
-    <h1>{post.data.title}</h1>
+  <article class="wrap prose">
+    <a class="back" href={u('blog')}>Writing</a>
+    <h1 class="post-title">{post.data.title}</h1>
     <p class="post-meta">
-      {fmt(post.data.date)}
-      {post.data.tags.length > 0 && <span> · {post.data.tags.join('  ·  ')}</span>}
+      <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
+      {post.data.tags.length > 0 && <span class="tags">{post.data.tags.map(t => `#${t}`).join(' ')}</span>}
     </p>
     <Content />
   </article>
@@ -28,19 +28,34 @@ const fmt = (d: Date) =>
 
 <style>
   .back {
-    font-family: var(--mono);
-    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 2.5rem 0 1.5rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
-    display: inline-block;
-    margin-bottom: 1.5rem;
+    text-decoration: none;
   }
-  .back:hover { color: var(--accent); opacity: 1; }
+  .back::before { content: '←'; }
+  .back:hover { color: var(--accent); }
+
+  .post-title {
+    font-size: var(--step-3);
+    font-weight: 700;
+    font-stretch: 85%;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
 
   .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin: 1rem 0 2.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
     font-family: var(--mono);
     font-size: 0.75rem;
     color: var(--text-dim);
-    margin: 0.4rem 0 2.5rem;
   }
-  .post-meta span { color: var(--accent); }
 </style>

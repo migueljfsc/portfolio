@@ -1,0 +1,192 @@
+---
+// Career as a rollout: oldest role on the left, current role live on the right.
+// On load a single pulse travels the track, lighting each role in turn.
+import { experience } from '../data/cv';
+import { u } from '../lib/url';
+import { slug } from '../lib/slug';
+
+const roles = [...experience].reverse();
+const last = roles.length - 1;
+const startYear = (period: string) => period.match(/\d{4}/)?.[0] ?? '';
+---
+<figure class="graph-wrap">
+  <ol class="graph" style={`--n: ${roles.length}`}>
+    {roles.map((r, i) => (
+      <li class:list={['node', { now: i === last }]} style={`--i: ${i}`}>
+        <span class="year">{i === last ? 'now' : startYear(r.period)}</span>
+        <span class="dot" aria-hidden="true"></span>
+        <a class="body" href={u(`cv#${slug(r.company)}`)}>
+          <span class="company">{r.company}</span>
+          <span class="title">{r.title}</span>
+          {r.highlight && <span class="highlight">{r.highlight}</span>}
+        </a>
+      </li>
+    ))}
+  </ol>
+  <figcaption class="caption">Career so far, from first internship to current role. Select a role for the full entry.</figcaption>
+</figure>
+
+<style>
+  .graph-wrap {
+    --dot: 18px;
+    --gap: 1.75rem;
+    --step: 0.55s;
+    --start: 0.55s;
+  }
+
+  .graph {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: 0 var(--gap);
+  }
+
+  .node {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1.6rem var(--dot) auto;
+    row-gap: 0.9rem;
+  }
+
+  .year {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    color: var(--text-dim);
+    align-self: end;
+  }
+  .now .year { color: var(--accent); }
+
+  /* Track segment from this node's dot to the next one */
+  .node::before,
+  .node::after {
+    content: '';
+    position: absolute;
+    top: calc(1.6rem + 0.9rem + var(--dot) / 2 - 1px);
+    left: var(--dot);
+    width: calc(100% + var(--gap) - var(--dot));
+    height: 2px;
+  }
+  .node::before { background: var(--border); }
+  .node::after {
+    background: var(--text-muted);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: grow var(--step) linear both;
+    animation-delay: calc(var(--start) + var(--i) * var(--step));
+  }
+  .now::before {
+    width: calc(100% - var(--dot));
+    background: repeating-linear-gradient(90deg, var(--border-lit) 0 6px, transparent 6px 12px);
+  }
+  .now::after { display: none; }
+
+  .dot {
+    position: relative;
+    width: var(--dot);
+    height: var(--dot);
+    border-radius: 50%;
+    border: 2px solid var(--border-lit);
+    background: var(--bg);
+    animation: light 0.3s var(--ease-out) both;
+    animation-delay: calc(var(--start) + var(--i) * var(--step));
+  }
+  .now .dot { animation-name: light-now; }
+  .now .dot::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    opacity: 0;
+    animation: ping 2.6s var(--ease-out) infinite;
+    animation-delay: calc(var(--start) + var(--i) * var(--step) + 0.3s);
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: inherit;
+    animation: settle 0.5s var(--ease-out) both;
+    animation-delay: calc(var(--start) + var(--i) * var(--step));
+  }
+  .company {
+    font-size: var(--step-2);
+    font-weight: 700;
+    font-stretch: 88%;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    transition: color 0.15s;
+  }
+  .title {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+  .highlight {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+    opacity: 0.85;
+  }
+  .body:hover .company { color: var(--accent); }
+
+  .caption {
+    margin-top: 1.75rem;
+    font-size: var(--step--1);
+    color: var(--text-dim);
+  }
+
+  @keyframes grow { to { transform: scaleX(1); } }
+  @keyframes light {
+    from { border-color: var(--border-lit); background: var(--bg); }
+    to   { border-color: var(--text-muted); background: var(--text-muted); }
+  }
+  @keyframes light-now {
+    from { border-color: var(--border-lit); background: var(--bg); transform: scale(1); }
+    60%  { transform: scale(1.3); }
+    to   { border-color: var(--accent); background: var(--accent); transform: scale(1); }
+  }
+  @keyframes ping {
+    0%   { transform: scale(1);   opacity: 0.9; }
+    80%  { transform: scale(2.4); opacity: 0; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  @keyframes settle {
+    from { opacity: 0.25; }
+    to   { opacity: 1; }
+  }
+
+  /* Vertical track on narrow screens */
+  @media (max-width: 760px) {
+    .graph {
+      grid-template-columns: 1fr;
+      gap: var(--gap) 0;
+    }
+    .node {
+      grid-template-columns: var(--dot) 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 1rem;
+      row-gap: 0.25rem;
+    }
+    .dot { grid-column: 1; grid-row: 1; align-self: center; }
+    .year { grid-column: 2; grid-row: 1; align-self: center; }
+    .body { grid-column: 2; grid-row: 2; }
+
+    .node::before,
+    .node::after {
+      top: var(--dot);
+      left: calc(var(--dot) / 2 - 1px);
+      width: 2px;
+      height: calc(100% + var(--gap) - var(--dot) / 2);
+    }
+    .node::after { transform: scaleY(0); transform-origin: top; animation-name: grow-y; }
+    .now::before { display: none; }
+  }
+  @keyframes grow-y { to { transform: scaleY(1); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .node::after { transform: none; }
+    .now .dot::after { display: none; }
+  }
+</style>

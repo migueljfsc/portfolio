@@ -25,7 +25,8 @@ content there, never inline in components. Exports: `profile`, `about`, `experie
 ## Stack
 - **Framework**: Astro 7 (static output)
 - **Styles**: Vanilla CSS with custom properties — no Tailwind, no UI lib
-- **Fonts**: IBM Plex Mono (headings/labels/mono), Inter (body) via Google Fonts
+- **Fonts**: Bricolage Grotesque (display + body, variable wdth/opsz), JetBrains Mono (dates, tags,
+  data only) via Google Fonts
 - **Package manager**: pnpm
 
 ## Project structure
@@ -35,55 +36,61 @@ src/
   data/cv.ts               — CANONICAL content (profile, about, experience, education, skills, projects)
   content.config.ts        — blog collection (glob loader, src/content/blog/*.md)
   content/blog/*.md        — blog posts (frontmatter: title, description, date, tags, draft)
-  layouts/Layout.astro     — shared shell: head, theme anti-FOUC, Nav, <slot>, Footer, reveal/glow scripts
+  layouts/Layout.astro     — shared shell: head, theme anti-FOUC, .shell, Nav, <slot>, Footer
   pages/
-    index.astro            — HOME: intro + latest posts + featured projects
+    index.astro            — HOME: headline hero + CareerGraph + featured projects + latest posts
     blog/index.astro       — blog post list
     blog/[...slug].astro   — single post (renders Markdown into .prose)
     projects.astro         — all projects
     cv.astro               — full CV (.layout = sticky .sidebar + .content)
     resume.astro           — print-only A4 résumé (PDF source); self-contained styles
   components/
-    Nav.astro              — top nav: brand + tabs (Blog/Projects/CV) + ThemeToggle; active-tab via path
+    Nav.astro              — top nav: brand + tabs (Writing/Projects/CV) + ThemeToggle; active-tab via path
+    CareerGraph.astro      — home signature: experience as a rollout track, animated once on load
+    PostList.astro         — shared post rows (home + blog index)
     Hero.astro             — CV sidebar: name + SocialLinks
-    SocialLinks.astro      — 4 icon buttons (GitHub/LinkedIn/Email/Résumé), hrefs from profile
+    SocialLinks.astro      — CTA row: Email (primary), Résumé, GitHub/LinkedIn icons
     ThemeToggle.astro      — inline dark/light toggle (lives in Nav)
     About / Projects / Experience / Skills / Footer.astro
-  styles/global.css        — design tokens (CSS vars), resets, layout, .wrap/.prose, shared utilities
+  lib/url.ts, lib/slug.ts  — base-aware URLs; anchor ids (CareerGraph links to /cv#<company>)
+  styles/global.css        — design tokens (CSS vars), resets, .shell/.wrap/.prose, .status chips
 public/
   favicon.svg, resume.pdf
 ```
 Components are presentation-only; CV content comes from `src/data/cv.ts`, blog content from Markdown.
 
 ## Layout
-- **Shell**: `Layout.astro` renders `<Nav>` (top, scrolls away) → `<main class="page">` slot → `<Footer>`.
-  Body is `--max-w` (1080px) centred. Reading pages use `.wrap` (760px); Markdown uses `.prose`.
-- **CV page only**: two-column — `position: sticky` `.sidebar` (Hero + Skills, `--sidebar-w` 300px,
-  internal scroll if it exceeds viewport) beside `.content` (About → Projects → Experience).
-  Stacks to one column below 860px.
+- **Shell**: `Layout.astro` renders `.shell` (`--max-w` 1120px) → `<Nav>` → `<main class="page">` slot
+  → `<Footer>` (contact prompt + links). Reading pages use `.wrap` (680px); Markdown uses `.prose`.
+- **CV page only**: grid — sticky sidebar (Hero + Skills, `--sidebar-w` 300px) beside content
+  (About → Experience/Education ledger). Stacks below 900px.
+- **Motion**: one orchestrated load sequence on home (hero rise + CareerGraph pulse). No scroll-reveal,
+  no ambient animation (NodeField only redraws on pointer move). Reduced motion collapses all of it.
 
 ## Adding a blog post
 Create `src/content/blog/<slug>.md` with frontmatter (`title`, `description`, `date`,
 optional `tags`, `draft`). URL is `/blog/<slug>`. `draft: true` hides it from lists and routes.
 
 ## Design tokens (global.css)
-| Token          | Value      | Use                       |
-|----------------|------------|---------------------------|
-| `--bg`         | `#0d0d0d`  | Page background           |
-| `--bg-card`    | `#141414`  | Card / section surfaces   |
-| `--border`     | `#222`     | Borders, dividers         |
-| `--text`       | `#e8e8e8`  | Primary text              |
-| `--text-muted` | `#888`     | Secondary / meta text     |
-| `--accent`     | `#5eead4`  | Links, highlights, labels |
-| `--mono`       | IBM Plex Mono | Headings, labels, tags |
-| `--sans`       | Inter      | Body copy                 |
-| `--max-w`      | `720px`    | Content column width      |
+Concept: "control plane" — blue-slate base; colour is semantic, not decorative. Backdrop is
+`NodeField.astro`: an always-on faint triangular mesh (opacity via `--mesh-alpha`) whose points and
+edges glow amber near the pointer (static on touch / reduced motion).
+| Token          | Dark       | Light      | Use                                   |
+|----------------|------------|------------|---------------------------------------|
+| `--bg`         | `#1a2027`  | `#e6e8e5`  | Page background                       |
+| `--bg-card`    | `#212833`  | `#f3f4f2`  | Surfaces, chips                       |
+| `--border`     | `#303a47`  | `#c6cbc8`  | Rules, dividers                       |
+| `--text`       | `#e7e4dc`  | `#1a2027`  | Primary text                          |
+| `--text-muted` | `#a3acb6`  | `#46505b`  | Secondary text                        |
+| `--accent`     | `#f0a63a`  | `#a35f00`  | Amber: current / in progress, primary CTA, focus |
+| `--ok`         | `#6fc28b`  | `#2f7d4b`  | Green: live / shipped                 |
+Type scale `--step--1`…`--step-4` (4:3 ratio). Status chips: `.status.wip` / `.status.live`.
 
 ## Content editing
 All content lives in `src/data/cv.ts` — no CMS, no inline arrays in components.
-- **Identity / links / email**: `profile`
+- **Identity / links / email / hero headline + summary**: `profile`
 - **About**: `about` (array of paragraphs)
-- **Experience**: `experience`  •  **Education**: `education`
+- **Experience**: `experience` (optional `highlight` = one-liner on the home CareerGraph)  •  **Education**: `education`
 - **Skills**: `skills`  •  **Projects**: `projects`
 
 ## Commands
@@ -114,12 +121,11 @@ Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`,
 - Styles scoped to components; only resets and tokens in global.css
 
 ## Theming
-- Dark (default) + light themes, toggled via `ThemeToggle.astro` (fixed top-right).
+- Dark + light themes, toggled via `ThemeToggle.astro` (in Nav).
 - Theme set by `data-theme` on `<html>`; persisted to `localStorage`, falls back to
-  `prefers-color-scheme`. Anti-FOUC inline script in `index.astro` `<head>`.
+  `prefers-color-scheme`. Anti-FOUC inline script in `Layout.astro` `<head>`.
 - All colors are CSS vars in `global.css`: dark values in `:root`, light overrides
-  in `:root[data-theme="light"]`. Palette: cream `#ECE3CE`, sage `#739072`,
-  green `#4F6F52`, forest `#3A4D39` — cream-on-forest (dark) / forest-on-cream (light).
+  in `:root[data-theme="light"]`.
 
 ## Astro docs
 - [Routing](https://docs.astro.build/en/guides/routing/)

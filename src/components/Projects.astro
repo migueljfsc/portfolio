@@ -6,159 +6,106 @@ interface Props {
   limit?: number;
   viewAllHref?: string;
 }
-const { heading = 'Projects', limit, viewAllHref } = Astro.props;
-const list = limit ? projects.slice(0, limit) : projects;
+const { heading, limit, viewAllHref } = Astro.props;
+const linked = projects.filter(p => p.href);
+const pending = projects.filter(p => !p.href);
+const list = limit ? linked.slice(0, limit) : linked;
+const host = (href: string) => new URL(href).hostname.replace(/^www\./, '');
 ---
 
-<section>
-  <p class="section-label reveal">{heading}</p>
-
-  <div class="projects-grid reveal">
-    {list.map(p => {
-      const Tag = p.href ? 'a' : 'div';
-      const linkProps = p.href ? { href: p.href, target: '_blank', rel: 'noopener' } : {};
-      return (
-        <Tag class:list={['card', { placeholder: !p.href }]} {...linkProps}>
-          <div class="card-header">
-            <span class="card-name">{p.name}</span>
-            {p.wip && <span class="wip-badge">WIP</span>}
-            {p.href && <span class="card-arrow">↗</span>}
-          </div>
-          <p class="card-desc">{p.description}</p>
-          <ul class="card-tags">
-            {p.tags.map(t => <li>{t}</li>)}
-          </ul>
-        </Tag>
-      );
-    })}
-  </div>
-
-  {viewAllHref && (
-    <a class="view-all reveal" href={viewAllHref}>view all projects →</a>
+<section class="projects">
+  {heading && (
+    <div class="section-head">
+      <h2 class="section-title">{heading}</h2>
+      {viewAllHref && <a class="section-link" href={viewAllHref}>All {linked.length} projects</a>}
+    </div>
   )}
+
+  <ul class="rows">
+    {list.map(p => (
+      <li>
+        <a class="row" href={p.href} target="_blank" rel="noopener">
+          <div class="head">
+            <h3 class="name">{p.name}</h3>
+            <span class:list={['status', p.wip ? 'wip' : 'live']}>{p.wip ? 'in progress' : 'live'}</span>
+          </div>
+          <div class="detail">
+            <p class="desc">{p.description}</p>
+            <p class="meta">
+              <span class="tags">{p.tags.join(', ')}</span>
+              <span class="host">{host(p.href)} <span aria-hidden="true">↗</span></span>
+            </p>
+          </div>
+        </a>
+      </li>
+    ))}
+    {!limit && pending.map(p => (
+      <li class="row pending">
+        <div class="head"><h3 class="name">{p.name}</h3></div>
+        <div class="detail"><p class="desc">{p.description}</p></div>
+      </li>
+    ))}
+  </ul>
 </section>
 
 <style>
-  .view-all {
-    display: inline-block;
-    margin-top: 1.1rem;
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--accent);
-  }
-  .view-all:hover { opacity: 1; text-decoration: underline; }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.5rem;
-    background: var(--bg-card);
-    color: inherit;
-    transition: background 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* gradient sheen that sweeps in on hover */
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%),
-                rgba(129, 195, 215, 0.14), transparent 45%);
-    opacity: 0;
-    transition: opacity 0.25s;
-    pointer-events: none;
-  }
-
-  .card:hover {
-    background: var(--bg-hover);
-    box-shadow: inset 0 0 0 1px var(--border-lit);
-    opacity: 1;
-  }
-  .card:hover::before { opacity: 1; }
-
-  /* "more coming soon" placeholder — not a link, muted, dashed */
-  .card.placeholder {
-    cursor: default;
-    border: 1px dashed var(--border-lit);
-    background: transparent;
-  }
-  .card.placeholder:hover {
-    background: transparent;
-    box-shadow: none;
-  }
-  .card.placeholder::before { display: none; }
-  .card.placeholder .card-name { color: var(--text-muted); }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .card-name {
-    font-family: var(--mono);
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--text);
-    flex: 1;
-  }
-
-  .card-arrow {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    transition: color 0.15s, transform 0.15s;
-  }
-  .card:hover .card-arrow {
-    color: var(--accent);
-    transform: translate(2px, -2px);
-  }
-
-  .wip-badge {
-    font-family: var(--mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    border: 1px solid var(--accent-dim);
-    padding: 0.1rem 0.35rem;
-    border-radius: 2px;
-  }
-
-  .card-desc {
-    font-size: 0.83rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    flex: 1;
-  }
-
-  .card-tags {
+  .rows {
     list-style: none;
+    border-top: 1px solid var(--border);
+  }
+  .rows > li { border-bottom: 1px solid var(--border); }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+    gap: 0.75rem 2.5rem;
+    padding: 1.75rem 1rem;
+    margin: 0 -1rem;
+    color: inherit;
+    border-radius: 6px;
+    transition: background 0.18s;
+  }
+  a.row:hover { background: var(--bg-hover); }
+  a.row:hover .name { color: var(--accent); }
+
+  .head {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: auto;
+    align-items: center;
+    align-content: start;
+    gap: 0.6rem 0.85rem;
+  }
+  .name {
+    font-size: var(--step-2);
+    font-weight: 700;
+    font-stretch: 85%;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    transition: color 0.15s;
   }
 
-  .card-tags li {
+  .desc {
+    max-width: 62ch;
+    color: var(--text);
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.4rem 1.5rem;
+    margin-top: 0.9rem;
     font-family: var(--mono);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     color: var(--text-dim);
-    letter-spacing: 0.04em;
   }
+  .host { color: var(--text-muted); }
 
-  .card-tags li:not(:last-child)::after {
-    content: ' ·';
-    margin-left: 0.4rem;
+  .pending .name { color: var(--text-dim); font-size: var(--step-1); }
+  .pending .desc { color: var(--text-muted); opacity: 1; }
+
+  @media (max-width: 760px) {
+    .row { grid-template-columns: 1fr; padding: 1.4rem 1rem; }
   }
 </style>
