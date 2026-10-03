@@ -49,4 +49,4 @@ Push to main and Actions builds and publishes to Pages. The site sits on a subpa
 subdomain now, so the `base` setting is gone. The photos moved off R2's development URL onto
 a proper domain at the same time.*
 
-[moto-journey.migueljfsc.dev](https://moto-journey.migueljfsc.dev)
+[motojourney.migueljfsc.dev](https://motojourney.migueljfsc.dev)

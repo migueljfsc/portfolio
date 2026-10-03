@@ -178,7 +178,7 @@ export const projects: Project[] = [
     name: "motorcycle-journey",
     description: "A bilingual (EN/PT) site documenting a motorcycle journey — trips, tips & tricks, a bike catalog, and per-bike service logs. Built with Astro + Tailwind, deployed to Cloudflare.",
     tags: ["Astro", "Tailwind", "TypeScript", "Cloudflare Workers"],
-    href: "https://moto-journey.migueljfsc.dev",
+    href: "https://motojourney.migueljfsc.dev",
     wip: false,
   },
   {
