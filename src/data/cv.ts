@@ -182,6 +182,13 @@ export const projects: Project[] = [
     wip: false,
   },
   {
+    name: "herdr-gh-actions",
+    description: "A GitHub Actions plugin for herdr, a terminal workspace for running AI coding agents side by side. Each agent's worktree gets its own CI status in the sidebar, a pane drills from commits down to searchable log lines, and a failed build goes back to the agent that broke it as a prompt with the failure attached, waiting for one Enter.",
+    tags: ["Node.js", "GitHub Actions", "AI Agents", "TUI", "gh CLI"],
+    href: "https://github.com/migueljfsc/herdr-gh-actions",
+    wip: false,
+  },
+  {
     name: "aws-app-platform",
     description: "An AWS application platform built with OpenTofu — reusable modules (ECS, RDS, ElastiCache, S3, SNS, ECR) and per-environment implementations (ACM, ALB, network, Route53, WAF, IAM), wired up with per-component CI and automated dependency updates.",
     tags: ["OpenTofu", "Terraform", "AWS", "IaC", "GitHub Actions"],
