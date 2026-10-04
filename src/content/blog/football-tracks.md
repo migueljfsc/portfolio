@@ -18,7 +18,7 @@ one.
 
 So football-tracks is the other half. Video in, positions out.
 
-![Ten seconds of a Rio Ave goal off the television, and the same ten seconds as dots on a pitch](https://pub-3b4bfc0114394ce680518fa92ce65e1d.r2.dev/blog/football-tracks-broadcast-to-topdown.gif)
+![Ten seconds of a Rio Ave goal off the television, and the same ten seconds as dots on a pitch](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/football-tracks/broadcast-to-topdown.gif)
 
 ## The one file between them
 
@@ -45,7 +45,7 @@ A broadcast frame is a photo of a flat plane taken from an angle. Getting from a
 position on the pitch is a 3 × 3 matrix, and finding that matrix means knowing where some known
 markings are in the picture. The halfway line, the edge of the box, the goal line.
 
-![Every pitch marking the detector can see on a frame, drawn in red to trace along](https://pub-3b4bfc0114394ce680518fa92ce65e1d.r2.dev/blog/football-tracks-seed.png)
+![Every pitch marking the detector can see on a frame, drawn in red to trace along](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/football-tracks/seed.png)
 
 The camera pans and zooms constantly, so it gets solved per frame rather than once. Where the
 solver can't see enough markings, the previous frame's matrix is carried forward by tracking
@@ -71,7 +71,7 @@ picture for that reason. A stage I can't look at is a stage I can't debug.
 A person detector runs on each frame, and the boxes get strung into tracks with stable ids. The
 detection part is solved and boring. Identity is where it goes wrong.
 
-![Detection boxes with confidence scores on one broadcast frame](https://pub-3b4bfc0114394ce680518fa92ce65e1d.r2.dev/blog/football-tracks-detections.png)
+![Detection boxes with confidence scores on one broadcast frame](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/football-tracks/detections.png)
 
 Two fifths of what comes back is photographers, staff and people in the crowd, so anything
 landing off the pitch gets dropped before tracking starts. Left in, they compete for
@@ -127,7 +127,7 @@ Every detected pitch marking projects back onto the pitch with a median of 0.11 
 it belongs to, and 78% inside half a metre. The top-down render puts ten players around the
 penalty area with the keeper on his line, which is what the frame shows.
 
-![The pitch model reprojected onto the broadcast frame, lines landing on lines](https://pub-3b4bfc0114394ce680518fa92ce65e1d.r2.dev/blog/football-tracks-calibration.png)
+![The pitch model reprojected onto the broadcast frame, lines landing on lines](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/football-tracks/calibration.png)
 
 That's the camera solved on footage nobody prepared. Tracking on it is still rough, 52 tracks
 for about a dozen people, and the team split is unproven there. But the part I thought would
