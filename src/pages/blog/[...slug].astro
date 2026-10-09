@@ -14,7 +14,7 @@ const { Content } = await render(post);
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
-<Layout title={`${post.data.title} — Miguel Cardoso`} description={post.data.description}>
+<Layout title={`${post.data.title} · Miguel Cardoso`} description={post.data.description}>
   <article class="wrap prose">
     <a class="back" href={u('blog')}>Writing</a>
     <h1 class="post-title">{post.data.title}</h1>
