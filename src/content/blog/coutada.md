@@ -6,8 +6,8 @@ tags: ["react", "maplibre", "cloudflare", "durable-objects", "side-project"]
 draft: false
 ---
 
-I hunt, and often on a property I don't know well. We go on foot. We spread out and bater
-terreno, as we say, each of us working our own strip of ground, and that only works if everyone
+I hunt, and often on a property I don't know well. We go on foot. We spread out in a line and
+sweep the ground, each of us working our own strip, and that only works if everyone
 knows where to turn, where to keep going and where to stop and wait for the others. Those points
 get handed out in the morning, out loud. Follow the track past the olive grove, go down to the
 stream, keep going until the Roman bridge and wait there for the rest. The people giving the
