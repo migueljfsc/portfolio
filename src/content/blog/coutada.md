@@ -8,15 +8,19 @@ draft: false
 
 I hunt, and often on a property I don't know well. We go on foot. We spread out in a line and
 sweep the ground, each of us working our own strip, and that only works if everyone
-knows where to turn, where to keep going and where to stop and wait for the others. Those points
-get handed out in the morning, out loud. Follow the track past the olive grove, go down to the
-stream, keep going until the Roman bridge and wait there for the rest. The people giving the
-directions have walked that ground for years. I haven't, and I have no idea which bridge they
-mean.
+knows where to turn, where to keep going and where to stop and wait for the others. We don't
+plan the day up front. We plan as we go: every time we stop, we work out where to go next from
+what the others say, like someone saw something move over that way, or that side of the hill is
+already done.
+
+Then it's said out loud. Follow the track past the olive grove, go down to the stream, keep going
+until the Roman bridge and wait there for the rest. The people saying it have walked that ground
+for years. I haven't, and I have no idea which bridge they mean.
 
 The fix is small. If someone who knows the place draws it on a map, or just drops a pin on the
 bridge, and I can see where I am on that same map, I'll get there. Once we're walking it helps to
-see everyone else too, so I know if I'm ahead of the others or the one holding them up.
+see everyone else too, so I know if I'm ahead of the others or the one holding them up, and to see
+the ground we've already covered, since that's most of what gets decided at each stop.
 
 Coutada is that map. It's a web app you open on your phone, with no account needed to join a
 hunt.
@@ -70,8 +74,9 @@ The host starts a hunt on the map and gets a four-character code to read out at 
 point. Everyone who types it in sees everyone else, and everyone leaves a trail as they walk, so
 you can see the ground that's been covered and where there's a gap. When the plan is to wait at
 the bridge, you can see who's still coming and how far back they are. The host can keep drawing
-during the hunt and every phone sees it straight away. Anyone can mark a sighting (a covey
-flushed, a hare that got away), and the host can keep one as a pin on the map.
+during the hunt and every phone sees it straight away, so at a stop whoever knows the place can
+drop a pin where we're going next. Anyone can mark a sighting (a covey flushed, a hare that got
+away), and the host can keep one as a pin on the map.
 
 Each hunt is a Durable Object in the EU jurisdiction, and the phones talk to it over WebSockets
 with hibernation, so the object sleeps between messages instead of running for the whole hunt.
