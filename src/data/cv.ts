@@ -174,7 +174,7 @@ export const projects: Project[] = [
   },
   {
     name: "coutada",
-    description: "A phone map for coordinating a hunt. The host draws the portas, the lines of posts and the cover to be driven on 30 cm satellite imagery, and everyone sees where they are and walks to their spot, offline when there's no signal. During a hunt everyone sees everyone's live position, relayed through a Durable Object in the EU and never stored.",
+    description: "A phone map for coordinating a hunt on foot. The host draws the reference points, the paths and the ground to cover on 30 cm satellite imagery, and everyone sees where they are and where to turn or wait, offline when there's no signal. During a hunt everyone sees everyone's live position, relayed through a Durable Object in the EU and never stored.",
     tags: ["React", "TypeScript", "MapLibre", "Cloudflare Workers", "Durable Objects"],
     href: "https://coutada.migueljfsc.dev",
     wip: true,

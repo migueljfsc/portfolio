@@ -1,31 +1,31 @@
 ---
 title: "Coutada: the hunt on a map"
-description: "A phone map for a montaria, built because \"go until the Roman bridge\" means nothing when you don't know the property."
+description: "A phone map for hunting on foot, built because \"go until the Roman bridge\" means nothing when you don't know the property."
 date: 2026-10-27
 tags: ["react", "maplibre", "cloudflare", "durable-objects", "side-project"]
 draft: false
 ---
 
-I hunt, and often on a property I don't know well. The morning goes the same way every time. We
-meet, the portas get handed out, and each of us is told how to reach ours. Follow the track past
-the olive grove, go down to the stream, keep going until the Roman bridge, and your porta is the
-second one after it. The people giving the directions have walked that
-ground for years. I haven't, and I have no idea which bridge they mean.
+I hunt, and often on a property I don't know well. We go on foot. We spread out and bater
+terreno, as we say, each of us working our own strip of ground, and that only works if everyone
+knows where to turn, where to keep going and where to stop and wait for the others. Those points
+get handed out in the morning, out loud. Follow the track past the olive grove, go down to the
+stream, keep going until the Roman bridge and wait there for the rest. The people giving the
+directions have walked that ground for years. I haven't, and I have no idea which bridge they
+mean.
 
 The fix is small. If someone who knows the place draws it on a map, or just drops a pin on the
-bridge, and I can see where I am on that same map, I'll get there. Once the hunt starts it helps
-to see everyone else too, the batedores most of all, since they're the ones moving through the
-cover.
+bridge, and I can see where I am on that same map, I'll get there. Once we're walking it helps to
+see everyone else too, so I know if I'm ahead of the others or the one holding them up.
 
 Coutada is that map. It's a web app you open on your phone, with no account needed to join a
 hunt.
 
 ## Drawing the property
 
-The host draws the hunt over satellite imagery. Portas are numbered pins, and each one sits on an
-armada, the line of posts it belongs to. Manchas, the patches of cover the batedores push through,
-are areas, and so are no-shoot zones and the property boundary. Then there are pins for gates,
-parking, the meeting point, water for the dogs, anything dangerous, and landmarks. The Roman
+The host draws the hunt over satellite imagery. Pins are the reference points: landmarks, gates,
+the meeting point, parking, water for the dogs, anything dangerous. Routes are paths to walk.
+Areas are the ground to cover, and also the no-shoot zones and the property boundary. The Roman
 bridge is a landmark.
 
 The imagery is DGT's OrtoSat 2023, 30 cm satellite imagery of the whole country, served over WMS.
@@ -36,9 +36,9 @@ and out as GeoJSON, GPX or KML, and a walk recorded on a watch can come in as a 
 The property in these recordings is made up. I drew it over the real imagery south of Salvaterra
 do Extremo, near the Erges.
 
-![A drawn property, and someone marking the Roman bridge on it](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/coutada/drawing.gif)
+![A drawn property, and someone marking the Roman bridge on it](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/coutada/map.gif)
 
-## Getting to your porta
+## Getting to the bridge
 
 Tap a pin and press Go here. The panel shows how far it is and an arrow pointing at it. On a phone
 with a compass the arrow turns with you. Without one it points on the map with north up, which is
@@ -62,16 +62,16 @@ The cache doesn't match tiles by URL. MapLibre and my prefetch code write the sa
 with different decimals, so a cached tile is found by a key made from the host, the layer and the
 box rounded to a tenth of a metre.
 
-![Going to the Roman bridge, and downloading the area for no signal](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/coutada/getting-there.gif)
+![Going to the Roman bridge, and downloading the area for no signal](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/coutada/to-the-bridge.gif)
 
 ## The hunt
 
 The host starts a hunt on the map and gets a four-character code to read out at the meeting
-point. Everyone who types it in sees everyone else. In a montaria the batedores leave a trail, so
-you can see the ground they've covered, and the portas don't, because they're standing still. In
-a caça de salto everybody walks and everybody leaves one. The host can keep drawing during the
-hunt and every phone sees it straight away. Anyone can mark a sighting (a boar seen, a covey
-flushed, a deer down), and the host can keep one as a pin on the map.
+point. Everyone who types it in sees everyone else, and everyone leaves a trail as they walk, so
+you can see the ground that's been covered and where there's a gap. When the plan is to wait at
+the bridge, you can see who's still coming and how far back they are. The host can keep drawing
+during the hunt and every phone sees it straight away. Anyone can mark a sighting (a covey
+flushed, a hare that got away), and the host can keep one as a pin on the map.
 
 Each hunt is a Durable Object in the EU jurisdiction, and the phones talk to it over WebSockets
 with hibernation, so the object sleeps between messages instead of running for the whole hunt.
@@ -85,10 +85,10 @@ through Turnstile, so a script's guesses cost what a person's do. The host sees 
 happens and can lock the hunt, kick someone or rotate the code. A locked hunt and a code that
 doesn't exist give the same answer, so a guess can't tell them apart.
 
-![A montaria with four portas and two batedores working the mancha, and the list of who's in](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/coutada/live-hunt.gif)
+![Six of us walking the ground with our trails behind us, and the list of who's in](https://pub-74b2ee807c464b14b538673b026716c3.r2.dev/blog/coutada/on-foot.gif)
 
 The other hunters in that recording are a script. It joins the hunt with the same API a phone
-uses and walks the batedores through the mancha over real WebSockets.
+uses and walks everyone across the ground over real WebSockets.
 
 ## Positions are never stored
 
@@ -112,7 +112,7 @@ A no-shoot zone is a drawing. Confirm by sight and by radio.
 It runs on the same base as Pitchboard: one Cloudflare Worker for the app and the API, D1 for maps
 and accounts, OpenTofu for the durable infrastructure, and the free tier for all of it. You can
 use it without an account, and signing in keeps your maps across phones. It's in Portuguese and
-English, Portuguese first, because the people at a montaria are Portuguese.
+English, Portuguese first, because the people I hunt with are Portuguese.
 
 Drawing, imagery, navigation, offline, live hunts, sightings and import and export all work. The
 code is on [GitHub](https://github.com/migueljfsc/coutada).
